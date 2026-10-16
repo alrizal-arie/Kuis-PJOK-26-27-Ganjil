@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🏆 Game Kuis PJOK - SMKN 6 Surabaya</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap');
+:root{--primary:#4361ee;--primary-dark:#3a0ca3;--success:#06d6a0;--danger:#ef476f;--warning:#ffd166;--bg:#0f0e17;--surface:#1a1a2e;--surface2:#16213e;--text:#fffffe;--text-muted:#a7a9be;--accent:#7f5af0;--gradient1:linear-gradient(135deg,#667eea 0%,#764ba2 100%);--gradient2:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);--gradient3:linear-gradient(135deg,#4facfe 0%,#00f2fe 100%);--gradient4:linear-gradient(135deg,#43e97b 0%,#38f9d7 100%);--card-shadow:0 8px 32px rgba(0,0,0,0.3)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 50%,rgba(99,102,241,.08) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(139,92,246,.06) 0%,transparent 50%),radial-gradient(circle at 40% 80%,rgba(79,70,229,.05) 0%,transparent 50%);pointer-events:none;z-index:0}
+.container{max-width:700px;margin:0 auto;padding:16px;position:relative;z-index:1}
+.screen{display:none;animation:fadeIn .4s ease}.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes bounceIn{0%{transform:scale(.3);opacity:0}50%{transform:scale(1.05)}70%{transform:scale(.9)}100%{transform:scale(1);opacity:1}}
+.home-header{text-align:center;padding:30px 0 20px}
+.home-logo{font-size:64px;margin-bottom:8px;display:block}
+.home-title{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;background:var(--gradient3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2}
+.home-subtitle{font-size:13px;color:var(--text-muted);margin-top:6px;letter-spacing:2px;text-transform:uppercase}
+.school-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);border-radius:20px;padding:6px 14px;font-size:12px;color:#a5b4fc;margin-top:12px}
+.form-card{background:var(--surface);border-radius:20px;padding:24px;margin-top:20px;border:1px solid rgba(255,255,255,.06);box-shadow:var(--card-shadow)}
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.form-input{width:100%;padding:12px 16px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-size:15px;font-family:inherit;transition:all .3s}
+.form-input:focus{outline:none;border-color:var(--primary);background:rgba(99,102,241,.08);box-shadow:0 0 0 3px rgba(99,102,241,.15)}
+.form-select{width:100%;padding:12px 16px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-size:15px;font-family:inherit;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a7a9be' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.form-select:focus{outline:none;border-color:var(--primary)}
+.form-select option{background:#1a1a2e;color:#fff}
+.mode-selector{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.mode-btn{padding:14px;border-radius:14px;border:2px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--text-muted);font-size:13px;font-weight:600;cursor:pointer;transition:all .3s;text-align:center;font-family:inherit}
+.mode-btn:hover{border-color:rgba(99,102,241,.4)}
+.mode-btn.selected{border-color:var(--primary);background:rgba(99,102,241,.15);color:var(--text);box-shadow:0 0 20px rgba(99,102,241,.2)}
+.mode-btn .mode-icon{font-size:24px;display:block;margin-bottom:4px}
+.mode-btn .mode-label{font-size:11px;color:var(--text-muted);display:block;margin-top:2px}
+.btn-start{width:100%;padding:16px;border:none;border-radius:14px;background:var(--gradient1);color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:20px;transition:all .3s;text-transform:uppercase;letter-spacing:1px}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(99,102,241,.4)}
+.btn-start:active{transform:translateY(0)}
+.btn-start:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.quiz-topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 0;margin-bottom:12px}
+.quiz-progress-wrap{flex:1;margin:0 12px}
+.quiz-progress-bar{height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.quiz-progress-fill{height:100%;background:var(--gradient3);border-radius:3px;transition:width .5s ease}
+.quiz-progress-text{font-size:11px;color:var(--text-muted);text-align:center;margin-top:4px}
+.quiz-stat{display:flex;align-items:center;gap:4px;font-size:14px;font-weight:700;padding:6px 12px;border-radius:10px;background:rgba(255,255,255,.06)}
+.quiz-stat.timer{color:#ffd166}.quiz-stat.score{color:#06d6a0}
+.question-card{background:var(--surface);border-radius:20px;padding:24px;border:1px solid rgba(255,255,255,.06);box-shadow:var(--card-shadow);animation:slideIn .4s ease}
+.question-number{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+.question-text{font-size:16px;font-weight:600;line-height:1.6;margin-bottom:20px}
+.options-list{display:flex;flex-direction:column;gap:10px}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:14px;border:2px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--text);font-size:14px;font-family:inherit;cursor:pointer;transition:all .25s;text-align:left;line-height:1.5}
+.option-btn:hover:not(.disabled){border-color:rgba(99,102,241,.5);background:rgba(99,102,241,.08)}
+.option-btn .opt-letter{min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(255,255,255,.08);font-weight:700;font-size:13px;flex-shrink:0}
+.option-btn.correct{border-color:var(--success)!important;background:rgba(6,214,160,.12)!important;animation:pulse .4s}
+.option-btn.correct .opt-letter{background:var(--success);color:#000}
+.option-btn.wrong{border-color:var(--danger)!important;background:rgba(239,71,111,.12)!important;animation:shake .4s}
+.option-btn.wrong .opt-letter{background:var(--danger);color:#fff}
+.option-btn.disabled{cursor:default;opacity:.6}
+.option-btn.disabled.correct{opacity:1}
+.option-btn.disabled.show-correct{opacity:1;border-color:var(--success)!important;background:rgba(6,214,160,.08)!important}
+.feedback-bar{margin-top:16px;padding:12px 16px;border-radius:12px;font-size:14px;font-weight:600;display:none;align-items:center;gap:8px;animation:bounceIn .4s}
+.feedback-bar.show{display:flex}.feedback-bar.correct-fb{background:rgba(6,214,160,.15);color:var(--success)}.feedback-bar.wrong-fb{background:rgba(239,71,111,.15);color:var(--danger)}
+.btn-next{width:100%;padding:14px;border:none;border-radius:12px;background:var(--gradient1);color:#fff;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:16px;display:none;transition:all .3s}
+.btn-next.show{display:block;animation:fadeIn .3s}
+.result-card{background:var(--surface);border-radius:24px;padding:30px 24px;text-align:center;border:1px solid rgba(255,255,255,.06);box-shadow:var(--card-shadow);margin-top:20px}
+.result-emoji{font-size:72px;display:block;margin-bottom:12px;animation:bounceIn .6s}
+.result-title{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;margin-bottom:4px}
+.result-subtitle{color:var(--text-muted);font-size:13px;margin-bottom:20px}
+.score-circle{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.score-circle::before{content:'';position:absolute;inset:0;border-radius:50%;padding:4px;background:var(--gradient3);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.score-number{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:800;background:var(--gradient3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.score-label{font-size:13px;color:var(--text-muted)}
+.result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+.stat-box{background:rgba(255,255,255,.04);border-radius:14px;padding:14px 8px}
+.stat-box .stat-val{font-size:22px;font-weight:800;font-family:'Space Grotesk',sans-serif}
+.stat-box .stat-lbl{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.stat-box.green .stat-val{color:var(--success)}.stat-box.red .stat-val{color:var(--danger)}.stat-box.yellow .stat-val{color:var(--warning)}
+.grade-badge{display:inline-block;padding:8px 24px;border-radius:12px;font-size:14px;font-weight:700;margin:10px 0}
+.grade-A{background:rgba(6,214,160,.2);color:var(--success)}.grade-B{background:rgba(79,172,254,.2);color:#4facfe}.grade-C{background:rgba(255,209,102,.2);color:var(--warning)}.grade-D{background:rgba(239,71,111,.2);color:var(--danger)}
+.result-student{background:rgba(255,255,255,.04);border-radius:12px;padding:12px;margin-bottom:16px;font-size:13px;text-align:left}
+.result-student div{margin:3px 0}.result-student span.label-rs{color:var(--text-muted);display:inline-block;width:80px}
+.review-toggle{width:100%;padding:12px;border:1.5px solid rgba(255,255,255,.1);border-radius:12px;background:transparent;color:var(--text-muted);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:16px;transition:all .3s}
+.review-toggle:hover{border-color:var(--primary);color:var(--text)}
+.review-list{display:none;margin-top:16px;text-align:left}.review-list.show{display:block}
+.review-item{background:rgba(255,255,255,.03);border-radius:12px;padding:14px;margin-bottom:10px;border-left:3px solid;font-size:13px;line-height:1.5}
+.review-item.rv-correct{border-left-color:var(--success)}.review-item.rv-wrong{border-left-color:var(--danger)}
+.review-item .rv-q{font-weight:600;margin-bottom:6px}
+.review-item .rv-ans{color:var(--text-muted)}.review-item .rv-ans .rv-correct-text{color:var(--success);font-weight:600}.review-item .rv-ans .rv-wrong-text{color:var(--danger);text-decoration:line-through}
+.btn-group{display:flex;gap:10px;margin-top:20px}
+.btn-action{flex:1;padding:14px;border:none;border-radius:12px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .3s}
+.btn-retry{background:var(--gradient1);color:#fff}.btn-home{background:rgba(255,255,255,.08);color:var(--text);border:1.5px solid rgba(255,255,255,.1)!important}
+.app-footer{text-align:center;padding:20px 0;font-size:11px;color:rgba(255,255,255,.2)}
+/* Music toggle */
+.music-toggle{position:fixed;top:12px;right:12px;z-index:999;width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.15);background:rgba(26,26,46,.9);backdrop-filter:blur(10px);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.music-toggle:hover{background:rgba(99,102,241,.3);border-color:var(--primary)}
+.music-toggle.playing{border-color:var(--success);animation:pulse 2s infinite}
+/* Rekap Screen */
+.rekap-card{background:var(--surface);border-radius:20px;padding:24px;margin-top:16px;border:1px solid rgba(255,255,255,.06);box-shadow:var(--card-shadow)}
+.rekap-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:12px}
+.rekap-table th{background:rgba(99,102,241,.2);color:#a5b4fc;padding:10px 8px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+.rekap-table td{padding:8px;border-bottom:1px solid rgba(255,255,255,.05)}
+.rekap-table tr:hover td{background:rgba(255,255,255,.03)}
+.rekap-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.rekap-filter select{flex:1;min-width:120px}
+.btn-sm{padding:8px 16px;border:none;border-radius:10px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .3s}
+.btn-export{background:var(--gradient4);color:#000}.btn-clear{background:rgba(239,71,111,.2);color:var(--danger)}
+.saved-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(6,214,160,.15);color:var(--success);padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600;margin-top:8px;animation:fadeIn .3s}
+/* Navigation tabs */
+.nav-tabs{display:flex;gap:8px;margin-top:16px}
+.nav-tab{flex:1;padding:12px;border:none;border-radius:12px;background:rgba(255,255,255,.05);color:var(--text-muted);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .3s;text-align:center}
+.nav-tab:hover{background:rgba(99,102,241,.1)}
+.nav-tab.active{background:rgba(99,102,241,.2);color:var(--text);border:1px solid rgba(99,102,241,.3)}
+/* Password overlay for rekap */
+.pwd-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:1000;display:none;align-items:center;justify-content:center}
+.pwd-overlay.show{display:flex}
+.pwd-card{background:var(--surface);border-radius:20px;padding:30px;max-width:360px;width:90%;text-align:center;border:1px solid rgba(255,255,255,.1)}
+.pwd-card h3{margin-bottom:16px;font-size:18px}
+.pwd-card .form-input{margin-bottom:12px}
+@media(max-width:400px){.home-title{font-size:22px}.question-text{font-size:14px}.result-stats{gap:6px}.stat-box .stat-val{font-size:18px}}
+</style>
+</head>
+<body>
+
+<!-- Music Toggle Button -->
+<button class="music-toggle" id="musicToggle" onclick="toggleMusic()" title="Background Music">🔇</button>
+
+<!-- Password Overlay for Rekap Guru -->
+<div class="pwd-overlay" id="pwdOverlay">
+  <div class="pwd-card">
+    <h3>🔒 Menu Guru</h3>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Masukkan password untuk mengakses rekap nilai</p>
+    <input type="password" class="form-input" id="pwdInput" placeholder="Password guru...">
+    <div style="display:flex;gap:8px">
+      <button class="btn-action btn-home" style="flex:1" onclick="closePwd()">Batal</button>
+      <button class="btn-action btn-retry" style="flex:1" onclick="checkPwd()">Masuk</button>
+    </div>
+    <p id="pwdError" style="color:var(--danger);font-size:12px;margin-top:8px;display:none">Password salah!</p>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ===== HOME SCREEN ===== -->
+<div class="screen active" id="homeScreen">
+  <div class="home-header">
+    <span class="home-logo">🏆</span>
+    <div class="home-title">Game Kuis PJOK</div>
+    <div class="home-subtitle">Challenge Your Knowledge</div>
+    <div class="school-badge">🏫 SMK Negeri 6 Surabaya</div>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showTab('siswa')">🎮 Mulai Kuis</button>
+    <button class="nav-tab" onclick="showTab('rekap')">📊 Rekap Guru</button>
+  </div>
+
+  <div class="form-card" id="tabSiswa">
+    <div class="form-group">
+      <label class="form-label">🏫 Pilih Kelas</label>
+      <select class="form-select" id="inputKelas" onchange="onKelasChange()">
+        <option value="">-- Pilih Kelas --</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">👤 Pilih Nama Siswa</label>
+      <select class="form-select" id="inputNama" disabled>
+        <option value="">-- Pilih kelas terlebih dahulu --</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">📝 Mode Penilaian</label>
+      <div class="mode-selector">
+        <button class="mode-btn" onclick="selectMode('PTS')" id="btnPTS">
+          <span class="mode-icon">📋</span>PTS<span class="mode-label">Tengah Semester</span>
+        </button>
+        <button class="mode-btn" onclick="selectMode('PAS')" id="btnPAS">
+          <span class="mode-icon">🏅</span>PAS<span class="mode-label">Akhir Semester</span>
+        </button>
+      </div>
+    </div>
+    <button class="btn-start" id="btnStart" onclick="startQuiz()" disabled>🚀 MULAI KUIS</button>
+  </div>
+
+  <div class="form-card" id="tabRekap" style="display:none">
+    <h3 style="font-size:16px;margin-bottom:12px">📊 Rekap Nilai Siswa</h3>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px">Hanya guru yang bisa mengakses menu ini</p>
+    <button class="btn-start" onclick="openPwd()">🔐 Buka Rekap Nilai</button>
+  </div>
+
+  <div class="app-footer">
+    Game Kuis PJOK &copy; 2026 — SMKN 6 Surabaya<br>
+    Dibuat oleh: Alrizal Arie Martha, S.Pd.
+  </div>
+</div>
+
+<!-- ===== QUIZ SCREEN ===== -->
+<div class="screen" id="quizScreen">
+  <div class="quiz-topbar">
+    <div class="quiz-stat timer" id="timerDisplay">⏱ 30</div>
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="quiz-progress-text" id="progressText">Soal 1 / 20</div>
+    </div>
+    <div class="quiz-stat score" id="scoreDisplay">⭐ 0</div>
+  </div>
+  <div class="question-card" id="questionCard">
+    <div class="question-number" id="questionNumber">SOAL 1</div>
+    <div class="question-text" id="questionText"></div>
+    <div class="options-list" id="optionsList"></div>
+    <div class="feedback-bar" id="feedbackBar"></div>
+    <button class="btn-next" id="btnNext" onclick="nextQuestion()">Soal Berikutnya →</button>
+  </div>
+</div>
+
+<!-- ===== RESULT SCREEN ===== -->
+<div class="screen" id="resultScreen">
+  <div class="home-header" style="padding-bottom:0">
+    <span class="home-logo" style="font-size:48px">📊</span>
+    <div class="home-title" style="font-size:22px">Hasil Penilaian</div>
+  </div>
+  <div class="result-card">
+    <span class="result-emoji" id="resultEmoji">🏆</span>
+    <div class="result-title" id="resultTitle">Luar Biasa!</div>
+    <div class="result-subtitle" id="resultSubtitle"></div>
+    <div class="result-student" id="resultStudent"></div>
+    <div class="score-circle">
+      <div class="score-number" id="resultScore">85</div>
+      <div class="score-label">NILAI</div>
+    </div>
+    <div id="resultGrade"></div>
+    <div class="result-stats">
+      <div class="stat-box green"><div class="stat-val" id="statCorrect">0</div><div class="stat-lbl">Benar</div></div>
+      <div class="stat-box red"><div class="stat-val" id="statWrong">0</div><div class="stat-lbl">Salah</div></div>
+      <div class="stat-box yellow"><div class="stat-val" id="statTime">0</div><div class="stat-lbl">Detik</div></div>
+    </div>
+    <div id="savedBadge"></div>
+    <button class="review-toggle" onclick="toggleReview()">📖 Lihat Pembahasan</button>
+    <div class="review-list" id="reviewList"></div>
+    <div class="btn-group">
+      <button class="btn-action btn-retry" onclick="retryQuiz()">🔄 Ulangi</button>
+      <button class="btn-action btn-home" onclick="goHome()">🏠 Menu</button>
+    </div>
+  </div>
+  <div class="app-footer">Game Kuis PJOK &copy; 2026 — SMKN 6 Surabaya</div>
+</div>
+
+<!-- ===== REKAP SCREEN ===== -->
+<div class="screen" id="rekapScreen">
+  <div class="home-header" style="padding:16px 0 0">
+    <div class="home-title" style="font-size:20px">📊 Rekap Nilai Kuis</div>
+    <div class="home-subtitle" style="margin-top:4px">Menu Guru — Alrizal Arie Martha, S.Pd.</div>
+  </div>
+  <div class="rekap-card">
+    <div class="rekap-filter">
+      <select class="form-select" id="rekapKelas" onchange="filterRekap()" style="font-size:13px;padding:10px">
+        <option value="all">Semua Kelas</option>
+      </select>
+      <select class="form-select" id="rekapMode" onchange="filterRekap()" style="font-size:13px;padding:10px;max-width:100px">
+        <option value="all">Semua</option><option value="PTS">PTS</option><option value="PAS">PAS</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button class="btn-sm btn-export" onclick="exportRekap()">📥 Export CSV</button>
+      <button class="btn-sm btn-clear" onclick="confirmClear()">🗑 Hapus Data</button>
+      <button class="btn-sm btn-home" style="padding:8px 12px;font-size:12px" onclick="goHome()">🏠</button>
+    </div>
+    <div id="rekapStats" style="font-size:12px;color:var(--text-muted);margin-bottom:8px"></div>
+    <div style="overflow-x:auto">
+      <table class="rekap-table" id="rekapTable">
+        <thead><tr><th>No</th><th>Nama Siswa</th><th>Kelas</th><th>Mode</th><th>Nilai</th><th>Benar</th><th>Waktu</th><th>Tanggal</th></tr></thead>
+        <tbody id="rekapBody"></tbody>
+      </table>
+    </div>
+    <div id="rekapEmpty" style="text-align:center;padding:40px 0;color:var(--text-muted);font-size:14px;display:none">
+      📭 Belum ada data nilai tersimpan
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- Background Music (royalty-free energetic loop) -->
+<!-- BGM via Web Audio API -->
+
+<script>
+// ==== STUDENT DATABASE ====
+const SISWA_DB = {"XI AKUNTANSI 1": [["AIS NAJWA HERMAWAN", "P"], ["AISYAH AYU MAHARANI", "P"], ["ALENA CARICA PUTRI GUNAWAN", "P"], ["ALMAIRA CALLISTA SAPUTRO", "P"], ["ANDINI ALYFIA NINGSIH", "P"], ["ANINDY TRI PRASETYA", "P"], ["ARINA NADHIFATUL QOLBY", "P"], ["ARROWINA WIGHASWARA AUDY HUTABARAT", "P"], ["AZKIA KHUSNUL KHOTIMAH", "P"], ["BALKIS IMANILA", "P"], ["CARISSA SASABILLAH", "P"], ["CARRIZA SALWA ANDINI", "P"], ["CLARA ANGELICA INDIE JATMIKO", "P"], ["DEA SEFIANA", "P"], ["DEVIRA YOWAN AZZAHRA", "P"], ["DEVITA AINUR ROSIDA", "P"], ["DONELIA ALMIRA", "P"], ["FARAH DILA IRAWAN", "P"], ["FEBRIANA AULIA AGISTA", "P"], ["FIFI NUR ALVIA", "P"], ["JESSICA OLIVIA DEWI", "P"], ["KEIKO ATHAYA GRISELDA", "P"], ["KEISYA NAURA OKTAVIANI", "P"], ["M. KAMIL RASHID DHAIFULLAH", "L"], ["MUHAMMAD RASYAH PUTRA RAMADHAN", "L"], ["NADIA FITRI ANGGRAINI", "P"], ["NATASIA PUTRI RAMADHANI", "P"], ["NAYRA NAFISHA SYACHLA", "P"], ["NAZWAH AYU APRILIYA", "P"], ["OCTAVIA PRATAMA", "P"], ["RAHAYU HIDAYAH", "P"], ["SARAH ANGGRAENI MEIASIH", "P"], ["SHELLO MEITHA YEMIMA BAIK", "P"], ["SILVIA AGUSTINASARA", "P"], ["VANNESA RAQAEL APRILIA PUTRI", "P"], ["YAZMINE PUTRI ALFARIZQI", "P"]], "XI AKUNTANSI 2": [["AMANDA RAFIFAH UFAIROH", "P"], ["AMELLIA PUTRI HARIYANTI", "P"], ["ANGELINE REGINA PUTRI", "P"], ["AQILAH ANISA RABBANI HIDAYATULLAH", "P"], ["ARIFAH PUTRI", "P"], ["ASSHAFA WIDYA ZAHRANI", "P"], ["AYU SEKARNINGRUM", "P"], ["BERLIAN FATARANI", "P"], ["DWI WAHYU OKTAVIA", "P"], ["E ANGEL SALSA PUTRI BAHI", "P"], ["FARADILLA KHAIRUNNISA", "P"], ["FATIMAH", "P"], ["FESILIA CIPTA OKTAVIANDA", "P"], ["GADIS ZANETA ARTEMESIA FULBERT", "P"], ["INTAN CLAUDIA RAHAYU", "P"], ["KASIH RAHMAWATI", "P"], ["KHANZA ODELIA PUTRI SALVATYAN", "P"], ["LEVIENNA ABIGAIL ELEUTRIA SARAGIH", "P"], ["LIFI VEVIOLA HAFIZAH", "P"], ["LOVIE CANTIKA AMALIA", "P"], ["MANIK CIKA MAILINDA", "P"], ["NAILAH EVANIA DURROTUN NAURAH", "P"], ["NAYLA RASMAH WIDYANTI", "P"], ["NIESHA DEARTANTI", "P"], ["NURINA ZAHRA KHAIRA", "P"], ["OLIEFIA CALLISTA ANINDYKA", "P"], ["PRIYA ELLENA ATHALIA PUTRI", "P"], ["PURNAMA SARI", "P"], ["REGINA AVRITARINI", "P"], ["RESTI AMELLIA PUTRI", "P"], ["ROSALBA DESTANTI", "P"], ["SALSABILA AINUR ROHMA", "P"], ["SHABRINA ISNAINI PUTRI CAHYONO", "P"], ["SHIEVA AULIA KUSUMA PUTRI", "P"], ["SHIVA RENA APRILIANZA", "P"], ["TRI WAHYU NINGSIH", "P"], ["ZAHRA NOVITA IF AINI AGUSTIN", "P"]], "XI DESAIN BUSANA 1": [["ABDIYAH", "P"], ["ADINDA BALQIS BASYA ASYA", "P"], ["AISYA LAILA RAHMA", "P"], ["AISYA NOVA AZHARA", "P"], ["ALEYA RAMBU MAY DJATI ANANDIHA", "P"], ["DINDA AULIA PUTRI HARDIANTI", "P"], ["FIRYAL ULAYYA BILBINA BALQIST", "P"], ["HAPPY CECILIA SAPNA", "P"], ["INAYAH ASSEGAFF", "P"], ["INTAN IZZAH ANDI PURNAMASARI", "P"], ["JESIECA LAILATUL QUSNIA", "P"], ["KATERIN ADITYA AGUSTINA", "P"], ["KEYZA NAFTHALIA ZAHRA", "P"], ["KHABIBATUS SAFINATUL KHARITSA", "P"], ["LOUISA JOAQUINN ELIFAS", "P"], ["LYLA ANANDA PRAMESWARI", "P"], ["MANUEL FERRY ADRIAN", "L"], ["MEGA DEWI SAFITRI", "P"], ["MELIA SETIAWAN", "P"], ["NAJWA FRIESKA UTAMI", "P"], ["NALANI ZAGITA FATARANI", "P"], ["POPY LAILA RAHMANIA", "P"], ["RAYA KHOIRUNNISA", "P"], ["RISKI IRMAWATI", "P"], ["SHIRIN KERUB RIZARD", "P"], ["SINGGASANA AROFAH", "P"], ["SITI RIZKIYAH", "P"], ["SYAIFANA SUCI NUR FADHILAH", "P"], ["TIRZA KENEDE", "P"], ["UMI SHALMA RAHMATUNNISA", "P"], ["VERLITA FANDA RIZMA", "P"], ["YASMINE PUTRI ANNISA WIJAYA", "P"]], "XI DESAIN BUSANA 2": [["AISYAH MARDHIYATUSOLIHAH", "P"], ["ALMIRA NUR KHOLIFAH", "P"], ["ALVITAMARA ISLAMEY AKBAR", "P"], ["AMALIA MUJAZANAH", "P"], ["ANITA AISYAHTUN NISYA", "P"], ["ANNISA TRI BUDIANI", "P"], ["ARUNI MAULIDIA JUNAIDI", "P"], ["ASYIFA DWI CITRA", "P"], ["ATA SARISHA EKKA PUTRI", "P"], ["BILQIS IZZA AGUSTINA HERI SAPUTRI", "P"], ["DANNIS NOFIANA FATUSSUNNAH", "P"], ["DEVA AYU SANTANU PANGKATAN", "P"], ["EGHARISMA PUTRI SADEWO", "P"], ["FELICIA GARNETA MAHAJANA", "P"], ["FILDZA GASSANI PUTRI IVANA", "P"], ["FRANSISKA PUTRI AUREL", "P"], ["HAEZAH PUTRI SHABRINA", "P"], ["IRMA ERVIANA NUR ABADIYAH", "P"], ["JESSICA NUR RAHMADANI", "P"], ["KHANSAA ALMAYRA PUTRI ARDHRIA", "P"], ["LUBNA ANINDYTA", "P"], ["MARSYANDA DEWI CINTA MAHARANI", "P"], ["MEILANI NAURA PUTRI", "P"], ["NADYA ZAHROTUS SITA", "P"], ["NASILLA YUNIARTI NENGSEH", "P"], ["NATASYA DWI RAHMAPANDI", "P"], ["NAYLA ZAHRATUN SYIFA", "P"], ["PUTERI GANES CANDANI", "P"], ["RENI AYU LESTARI", "P"], ["STEFYANA RAMADHANI", "P"], ["SUZANNE CALYSTAJULLIE SANTOSA", "P"], ["TIARA AMANDA SAFITRI", "P"], ["UMMU KHILMI LAILATUS SHOUMI", "P"], ["YEISA SEPTIASA PUTRI YAHYA", "P"], ["ZAHIRA PUTRI AZIGHA", "P"]], "XI DESAIN BUSANA 3": [["AULIA AZZAHRA", "P"], ["AULIA SEPTIA PUTRI MULYA", "P"], ["AULIA VEVEY RAMADHANI", "P"], ["AURA RIZKA AULIA", "P"], ["AUREL LEA REVY ANNEIRA", "P"], ["AURELIA AZAHRAH PUTRI HARIYADI", "P"], ["AURELIA KEIZYA APRILA", "P"], ["AURELIA RAMADANI PUTRI", "P"], ["AURREL ANGELINA SHERON", "P"], ["AZKA FIDELA RAMADHANI", "P"], ["CHELSEA DESWITA PERMATASARI", "P"], ["DEVI ANGGRAINI SAPUTRI", "P"], ["DIANA SALSABIIL LUBIS", "P"], ["EVA MEYLANI PUTRI", "P"], ["FIERSA ZASKIA IRMAYANTI", "P"], ["FIKHRIYA ALYA KARAMUHU", "P"], ["HAYUDYAH LINTANG PRAMESWARI", "P"], ["INAYAH NUR ARIFAH CHAMELIA", "P"], ["KARINA RAHMANIA NURUL IZZAH", "P"], ["KIRANA ATHIFAH HUDANI", "P"], ["LOVELYLIAN SANG RAMADHINATA SILANA", "P"], ["MARISSA FEBIOLA", "P"], ["MELATI DWI PURNAMA", "P"], ["NAILA FAUZIAH RAHARDIAN", "P"], ["NERVI HAYU CATUR SISWANTO", "P"], ["NESSHA NASWANATHA SANTOSO", "P"], ["NOVITA INDAH FITRIANI", "P"], ["RIFA ANGGREINI", "P"], ["SANIYAH FADILAH ARIFIN", "P"], ["SYAFA PUTRI LESTARI", "P"], ["SYAHIRA NUR RAHMA", "P"], ["WAHYU FADILAH SARI", "P"], ["WARDATUL HAMRO", "P"], ["ZAHRA AURORA RAMADHANI", "P"]], "XI DESAIN VISUAL 1": [["MUHAMMAD FATHIHUL ULUM", "L"], ["ADILA ARTANTI", "P"], ["ADITYA RAHMAN", "L"], ["ALVARO CHIFRANDY AFLAH SETYAWAN", "L"], ["ANASTASYA CAHYATI WANDA ABUL", "P"], ["ANDHIKA AKBAR FIRMANSYAH", "L"], ["ARIF AULADUN ABROR", "L"], ["AULIA FITRI SALSABILAH", "P"], ["DAGHFAL GHUDZAMIR ZUBAIDI", "L"], ["FIRDAN ADITYA PRATAMA", "L"], ["GITA ANUGRAH SARI", "P"], ["KALINA AGATHA RAMADHANI", "P"], ["KAYLA MAULIDA YAHYA", "P"], ["MOCHAMMAD DHOMIRIN ANVINO", "L"], ["MOCHAMMAD RAFIF BRAHMASTYA", "L"], ["MOZA JANEETA PUTRI", "P"], ["MUHAMAD DAFIN ALVIANO", "L"], ["MUHAMMAD ADJI SAPUTRA", "L"], ["MUHAMMAD KEVIN WICAKSONO", "L"], ["MUHAMMAD KHOIRUL ILHAM", "L"], ["MUHCHAMAD BINTANG MAULANA SAKTI", "L"], ["NAJID MIRZA UKAIL", "L"], ["NEILA SYAFIYA ANJANI", "P"], ["NI WAYAN PUTRI ARYANI", "P"], ["NIKO ANDIKA PUTRA", "L"], ["RADHITYA RIZKY PUTRA NUGRAHA", "L"], ["RAFAEL BINTANG ANTHONI PUTRA", "L"], ["RAIKHATUL JANNAH", "P"], ["RENO JANUAR AFRIANSYAH", "L"], ["REVAN ARDIANSYAH", "L"], ["ROICHAN IDRIS ABDILLAH AL KAISA", "L"], ["SOFIA DWI LAKSONO", "P"], ["SYAHWAN RIZAL", "L"], ["SYIFA KAMILA SURIA PUTRI", "P"], ["ZAHRA PUTRI HANAFI", "P"], ["ZEIN AZKA KAMIL AR RACHMAN", "L"]], "XI DESAIN VISUAL 2": [["MUHAMMAD FADHIL RIZQULLAH", "L"], ["ADELARD NAUFAL RIZQULLAH", "L"], ["ADIF PRATAMA", "L"], ["AISYAH NUR IVANIA", "P"], ["AISYAH PUTRI SETYORINI", "P"], ["ANDINI CALYA SA'DAN", "P"], ["ASYIFA SYAKILA RIZQITA", "P"], ["CLARISSA MAULIDIA", "P"], ["DEANA GRANIA RAMADHANI", "P"], ["DIMAS REYHAN ARDHANI", "L"], ["ELFRADO EMANUEL", "L"], ["FARHAN FAIRUZ NAZAM", "L"], ["GARNETA PUTRI HANDINI", "P"], ["GERY LUCKY LAKI KU", "L"], ["HYACINTHA SAVIORIN", "P"], ["KHALISYAH DANNIYAH BENING PRATAMA", "P"], ["KHEISYA FARINATA CAROLINA PUTRI", "P"], ["M. FALFARICO HIDAYAT", "L"], ["MUHAMMAD AMMAR RAFI SHAFWAN", "L"], ["MUHAMMAD HIBRIZI HIBATULLOH", "L"], ["MUHAMMAD NABIL ZEVANA SATRYA", "L"], ["NAELYNDRA CHALLISTA PUTRI", "P"], ["NIKITA AURELIA PONDAN", "P"], ["NIZANA URIELLA FAUZIAH", "P"], ["NOVISCA ANGELINA HALATU", "P"], ["OCTHA SHAWALYA PUTRI", "P"], ["PEDRO PRADITIA PANJI ARKANANTA", "L"], ["PUTRIE MELATIE AIERRA", "P"], ["R. VALLIAN AL KHALISH", "L"], ["RADITYA ALIF ARDIANSYAH", "L"], ["SALSABILA JUNEETA SIVIA", "P"], ["SHINTA AIRA PURNA LIVEA PUTRI", "P"], ["SILMI AIRIILMI TAFTAZANI", "P"], ["SYAFAAH FIRZAN ZAYYAN", "P"], ["THARIQ KEMAL FEBRIAN", "L"], ["YUNITA ALISYA PUTRI", "P"], ["ZABRINA NUGRA ARISTAWATI", "P"]], "XI TKC 1": [["DIEVA CELLINIE RAHADIANSYA", "P"], ["AL ZEYNA NAUMI ZALYA", "P"], ["ALISYA ANINDITA RAMADHANI", "P"], ["ALMIRA RIFNNY AZZARAH", "P"], ["ALUNINDA NISA PUTRI", "P"], ["ANATASYA APRILIA ADINDA", "P"], ["ANATASYA ARINDA", "P"], ["AURA LENTERA KASIH", "P"], ["AZMI LAILI ROSYIDAH", "P"], ["DIYAH PERMATA SARI", "P"], ["ERNES TASIA RIFAI", "P"], ["FEBE AMANDA CHRISTIANTI", "P"], ["FITRI ROMADHONI", "P"], ["KAMILA NUR RAHMAYATI", "P"], ["KEYSSA MAULUDIAH SAPUTRI", "P"], ["LUVENA CAHYANI ARIYANTI", "P"], ["MALIA AYODIA YUENDRA", "P"], ["MAULA YURIZKY EL SAFIRA", "P"], ["NASYA PUTRI CAHYONO", "P"], ["NAYLA TATYANA FAIZAH", "P"], ["NAYSILA AYU PUTRI HARDOYO", "P"], ["REVALIA PUTRI ANANTA", "P"], ["SAFITRI NOVIAWATI", "P"], ["SEPTIA AYU RAMADHANI", "P"], ["SHAFINA ANGELINA KAMIL", "P"], ["SHAFIRA SIVANIA ZAEN", "P"], ["SHAKILA FAZILA FARAH ISNAINI", "P"], ["SITI MARIANA", "P"], ["SYIFA LARASATI PUTRI ISKANDAR", "P"], ["TANIA REVASELINA RAHMADANI", "P"], ["YASMIN GISKA RISKI AZ-ZAHRA", "P"], ["ZASKIA SAFA AZALIA", "P"]], "XI TKC 2": [["ADELIA ZAHROTUS SYIFA", "P"], ["ANANDA PUTRI MIANTRA LUJENG", "P"], ["APRILIA DWI WULANDARI", "P"], ["APRILIA MAYSHA AYU MAHARANI", "P"], ["AQUEENE PRADNYA ANANDA PUTRI SANTIAGO", "P"], ["ARETHA ZIZI SANDRICA", "P"], ["AULYA SAVA SANTIKA", "P"], ["AYU SRI REJEKI", "P"], ["BIANCA CHARISMA MALINDA", "P"], ["CARLA NUR'AISYAH RAMADHANI", "P"], ["CAROLINE HANIFA PESONA NURYAT", "P"], ["DEVA ADELIA ZAHRA SAPUTRI", "P"], ["DEVITA EVRILYA FIRZA", "P"], ["ERZHA MEYLITA KARTIKA FANY", "P"], ["FERLISA PUTRI CAHYA AYU KARUNIA", "P"], ["INDIRA DEWI KASTAMAN", "P"], ["INDIRA FEBRESYA SMARADANI", "P"], ["IVORRY ARIELLA SHAFIYAH", "P"], ["JESSICA BEAUTY PRANATA", "P"], ["KEISYA NAYLA ASHIFA", "P"], ["KEYSHA ISNAINI AZ-ZAHRA", "P"], ["KHINARA MAHENING SEKAR", "P"], ["LOIS ADELIA PANGGABEAN", "P"], ["MAULIDDA AURELIA PUTRI HADITAMA", "P"], ["NAIFAH QUINSHA PUTRI YUNIAR", "P"], ["NAJWA QALEISYA PUTRI", "P"], ["NASHWA ELYZIA ISAURA FAZAR", "P"], ["NINA CARISSA TRI DAMAYANTI", "P"], ["PRADNYA BRIGITTA KISSYA FERNADH", "P"], ["RENATA ARDIVA YUWONO", "P"], ["RISKA AYU FITRIANI", "P"], ["SILVIA TITIAN PURNAMANINGTYAS", "P"], ["SIVA FAUZIYAH", "P"], ["TALITHA ZAHRA SAFIRA", "P"]], "XI TKC 3": [["ALFATUN NISA", "P"], ["ARDINDA PUTRI KASAFA", "P"], ["ARLIZAH TRI WARDANI", "P"], ["AUREL DWI FEBRIANTI", "P"], ["AZZAHRA ILVANI SALSABILLA", "P"], ["CAHYA ANGGIE VANNESYAH", "P"], ["CALISTA PUTRI PARAMITA", "P"], ["CHOIRUNISSA AULIA NURIWA", "P"], ["DINI ZAFIRA NASHA FILDARAIN", "P"], ["FARA FEBRIANA PUTRI", "P"], ["FITRI RAHMA WATI", "P"], ["IMELDA DWI CAHYANI", "P"], ["KASHFANY ELLYA KHOIRONY", "P"], ["KEISYA FARA MAULIDYA", "P"], ["KHANSA MAULIDYA AZHARA SACHRONI", "P"], ["KIARA FASYA SALSABILA", "P"], ["KIRANA CLARASATI HIDAYAT", "P"], ["MARLEEN GAVRILA SOERJOASMORO", "P"], ["NABILA KAYLA AZZAHRA", "P"], ["NADIA AULIA", "P"], ["NADILA SALSABILA NUR SAHIRA", "P"], ["NILAM ZASKIA YULIANTONI", "P"], ["NOVELLIA ASTARI PUTRI", "P"], ["NOVIA DWI ELIASARI", "P"], ["QONITA ABADIA", "P"], ["RAFIQA PUTRI DAYU PRATISTA", "P"], ["RAGIL JULIA PUTRI", "P"], ["SELLY VITAJANNAH", "P"], ["SHABIYYAH MUMTAZAH", "P"], ["SHAQILA ANASTASYA TALITA ZAHRAN", "P"], ["VALSYA PANGESTU HANDAYANI", "P"], ["VANESSA DWI ANGELICA", "P"], ["YUNA ISMIRA ALIM", "P"], ["ZEIKHA MARSA ARNELITA", "P"]], "XI TKI 1": [["VIOLA KENYA CHRISTINE NUGROHO", "P"], ["ABRAHAM ISARAEL WIRA BUDHA", "L"], ["AGNES ARTIKA WIDYA TRISTANTI", "P"], ["AIRA PUTRI ANAYHA", "P"], ["ALAN BUDIYANTO", "L"], ["AMELLIA KARIMA QAYYUUMA", "P"], ["ANINDRA KARISMAPUTRA", "L"], ["ARYA GUSKANY MANALU", "L"], ["BILQIS MAULIN JANES", "P"], ["CHARISSA ANITYA ANNISA", "P"], ["CLAUDYA PRASETYO THAMRIN", "P"], ["CYRILLA SAQUEENA JAVI", "P"], ["DEVA PUTRI FAJARINA", "P"], ["DIN AULIA RAFA", "L"], ["DISWANTI FADILLAH RAHMA NURANI", "P"], ["FAVIAN ANDIKA PRATAMA", "L"], ["FIENI PUSPITA WAHYU NINGTIAS", "P"], ["FLORENCIA JUJUN SETYO ASMORO", "P"], ["JAVIER FAUSTAONE", "L"], ["JOYCE KERENHAPPUCH LUHUKAY", "P"], ["KHANSA CHERRY FADHILAH", "P"], ["LISTYA ECHA YUNIAR", "P"], ["MARTINUS RENDY ALEXANDER SETIAWAN", "L"], ["MAULIDYA MARTA LUNA FATARANI", "P"], ["MUHAMMAD HAFIZ BAHTIAR", "L"], ["MUHAMMAD ZACKY SAHRI RAMADHAN", "L"], ["NABILA MUMTAZ ABDIL HAQQ", "P"], ["NAILA PUTRI FUADY", "P"], ["NAILLUL KHOIROTI", "P"], ["NATHANIELA CHRISTCATHABELL APTAHIROSHI", "P"], ["PUTRA ILYASA KATSIRUN NAWAL", "L"], ["QUINSHA NABILAH PRAMESTI", "P"], ["REIKE NAOMY MASITA MAHARANI PUTRI", "P"], ["RR ADDIN NATASYA RACMAN", "P"], ["SHILO FREYA PUTERINISA", "P"], ["VEONEZA MAULIDYA RIWANDHANI", "P"], ["YUSLIMAH ANGGRAINI", "P"]], "XI TKI 2": [["ADINDA RIZKIYA SUSILO HARTONO", "P"], ["AIRA NABIHA PASAH", "P"], ["AISYAH ASY SYIFA UST STANI", "P"], ["AREL ANDIKA", "L"], ["ARJUNA KEVIN FEBRIANO", "L"], ["AURELIA KEISYA LAILATUL FITRIAH", "P"], ["CARISSA ALVINA DAMAYANTI", "P"], ["CHAISYAH NUR AINI", "P"], ["DEBBY NOVIYANTI", "P"], ["DYFINA SHIFANA PUTRI", "P"], ["FANISA RAHMALIA", "P"], ["GALUH AMBARWATI", "P"], ["JEANETA PUTRI ATMAJA", "P"], ["KAYYISA SABRINA", "P"], ["KRAKATHAU QANEETHA KUSTARDIONO", "P"], ["MAURA AULIYA ARIWINATA", "P"], ["MOCHAMMAD BINTANG AL-ZAKKIRAN", "L"], ["MUSYARROFAH", "P"], ["NABILA ALOEDYA KARTIKA", "P"], ["NADIYAH SAUSAN", "P"], ["NAULI SAFIRA BR SIBUEA", "P"], ["NERVA AKBAR ADELVINO", "L"], ["NIA ANJAR WATI", "P"], ["NURUL LAILI FITRIYA", "P"], ["OKTAVIANO HARTA PERKASA", "L"], ["OLIVIA SITI NUR AZIZAH", "P"], ["RAHAYU WANDIRA", "P"], ["RAHMAN AGUSTIAN SAPUTRA", "L"], ["REYSA ANASTASYA", "P"], ["RHEFA NAUFAL HIZBULLAH", "L"], ["SAFARAZ DZIKRI ATHALLA RIFKI", "L"], ["SESA AZELLIA MAYRANI", "P"], ["TIAN FIRNANDA", "L"], ["VINO BHAKTI HARTANTO", "L"], ["YASHMINE AURELYA FITRI AFFANDY", "P"], ["ZAHRA KHOIRUN NISSA RUSMANTARI", "P"]], "XI KULINER 1": [["AGASTYO ARYONINDYO BASKORO", "L"], ["AGNI INNA SAFITRI", "P"], ["AIRA ERLYANITA", "P"], ["ALDA FUADIYAH", "P"], ["ANISAH SILVIA SOFYAN", "P"], ["ANJANI VIRA MAULADANI", "P"], ["ASMARANTI ANANDA HASANAH", "P"], ["AULIA PRIYANTIKA ARDYANTI", "P"], ["AYUNDA PUSPA EFFENDI", "P"], ["BILQISH LATHIIFA ASFIIYAH", "P"], ["CARISSA RAHMA GANI", "P"], ["CHANDHANITI DARALAKSMITHA", "P"], ["DILLA RAMADITHA", "P"], ["DINDA AYU AMADEA", "P"], ["ELVINA EKA PUTRI ANDARISTA", "P"], ["FAIZAL SYARIFUDIN YUSUF", "L"], ["HILWAN NADA EL RAHMAH", "P"], ["ILMIRA OKTAVIA NIRMALA", "P"], ["JESSICA FYTRY MAHARANY", "P"], ["KARLINA ATTA AMIRAH PRASETIYO", "P"], ["LAILATUL MA'RIFAH", "P"], ["NADHIA YULISTINA PUTRI", "P"], ["NIRWASITA ZUFAR AN NABHANY", "L"], ["NURUL 'AINI AL IRSYAD", "P"], ["NURUL PUTRI LATHIFA", "P"], ["RACHMADINA ASY SYIFA", "P"], ["RAMADIZA FARAS NURAFIQAH", "P"], ["RANDY DAMARA PUTRA JOHARI", "L"], ["RAZITA QURRATU 'AINI", "P"], ["RIZANI INDIRA PUTRI", "P"], ["SELLO VANDIA IRAWAN", "P"], ["SYIFA DWI MAIMUNAH", "P"], ["SYIFAUL QOLBINNISA", "P"], ["TALITHA AURELIA NURAENI", "P"], ["TIKA PRAMESTI", "P"], ["ZATHURA AZZAHTA WIRANDHARIE", "P"]], "XI KULINER 2": [["ADINDA CALLISTA PUTRI", "P"], ["ALGIS AMANATULLOH", "L"], ["ALMYRA PUSPA DUMAWA", "P"], ["AMIRA KHALIESA FIRZANNAH", "P"], ["AMIRA RAMADANI PUTRI", "P"], ["ANANDA RIZQIA NOVIRIN", "P"], ["ANDHARA PUTRI LA VIOLA", "P"], ["AQEELA ZUHRA REVIELLIA RACHMAD", "P"], ["ARETHA AZMI ANANTA", "P"], ["ARGA SANDY PRATISTA MUKTI", "L"], ["ARINA HILYAH FADLAH", "P"], ["CINTA NURROHMAH HAJRIYAH", "P"], ["DAFFA ARRAFI IBNU SURYA", "L"], ["DESVITA DWI ARDYANSYAH PUTRI", "P"], ["HANA CANDRA KUSUMA", "P"], ["HANDINI MARGHARETA PUTRI", "P"], ["IVO PUTRA RIES MIKO", "L"], ["KHANSADIA RAFAISYAH", "P"], ["LAILATUL FADILAH", "P"], ["LASTRI", "P"], ["MAULANA BINTANG RAMADHAN", "L"], ["MAULIDA RIZQI NURDINA", "P"], ["MUHAMMAD HUDA", "L"], ["MUHAMMAD MARVEL FEDRIAN PRASETYO", "L"], ["MUHAMMAD SHAQUELLE AZZAM", "L"], ["MUTIARA INDAH KURNIA", "P"], ["NABILA KEZHIA PUTRI", "P"], ["NASSWA AUREL ISLAMI", "P"], ["RICKA RAMADHANI", "P"], ["RISKA JULIANA DWIYANTI", "P"], ["RISMA EKA ARYANTI", "P"], ["SORAYA SYARIFA NATASYA", "P"], ["SYAFANA AULIA RAMADHANI", "P"], ["SYIFANA AULIA RAMADHANI", "P"], ["YULIANA RAMADHANI PRABOWO", "P"]], "XI KULINER 3": [["CHIKA PRISKA AURELIA", "P"], ["ABIGAIL SHINTA ROSDEWI SIRAIT", "P"], ["ALODIA FIONA MAHESWARI ZANETA", "P"], ["ANGGRAINI NOVITA INDRAYANI", "P"], ["ANGGUN DESITASARI", "P"], ["ARTANTI CANDRAWATI SANTOSO", "P"], ["ASMA'UL ZAHRA NABIYAH", "P"], ["BINTANG SETIA WAHYUDI", "L"], ["CHIKA SINTA CHERILDA PUTRI", "P"], ["GAHZYA FREDA PUTRA PRATAMA ADITYA", "L"], ["HAFZAH NUR AZIZAH", "P"], ["I MADE DHARMA KAWINDRA PUTRA HARTAWAN", "L"], ["I NYOMAN ANOM KRESNA GIMANTARA", "L"], ["IGNATYO KEVIN ELYAS", "L"], ["INDRIANI SALSABILA PUTRI INDARTO", "P"], ["JERVANO KAWULA RAHYUNDA", "L"], ["LEANDRO RICKY JADMIKA", "L"], ["LUTHFIANA AULIA AZHAR", "P"], ["MAYURA", "P"], ["MOCH. BAYU ZAKARIYA PRATAMA", "L"], ["NINDITA SEKAR HAPSARI", "P"], ["RARA ARDILLA AMARIYA SARI", "P"], ["RENI ANGGRAINI", "P"], ["REVALIA RATNA FEBBIYANTI", "P"], ["REVANO CHRISTIAN PRAKOSO JULIUS", "L"], ["RIFAN APRIANTO", "L"], ["RIZKY NUR NAZIIHAH", "P"], ["SALWA FATIHATINNURIL AINI", "P"], ["SILVIA MEI NUR AISAH", "P"], ["SYAFA REGINA PRATIWI", "P"], ["SYIFA ARIANI RASYIED", "P"], ["VABIANA ZAHWA BINTANG RIADI", "P"]], "XI KULINER 4": [["ADELIA MALDIA AROFAH", "P"], ["AISYAH KHUSNUL RAHMA", "P"], ["ALMIRA NURUL FAIZAH", "P"], ["AMANDA SEPTI RAMADHAN", "P"], ["AMEERA SHAFA KURNIA", "P"], ["AMIRA NISRINA SYABITA", "P"], ["ANINDYA KHISWA JASTINA", "P"], ["ASHFIYA BINTANG RAHMASUCI", "P"], ["BENING CAHAYA AULIA", "P"], ["DESTIANI SHESA RINI UTAMI", "P"], ["DEWI MAHARANI", "P"], ["DIO SYAHPUTRA", "L"], ["FANNY ANISAH ZAFIRAH", "P"], ["HILLARY DIAJENG PUTRI", "P"], ["KHOILATUL NUR ANGGRAINI", "P"], ["MELLOW ANJANIE", "P"], ["MOCH. VALENTINO", "L"], ["MUHAMMAD IKHSAN ROMADHONI", "L"], ["NABILLA ALIFAH YUDHAN PUTRI", "P"], ["NADHIRAH AURELLIA SYAFITRI", "P"], ["NANDARAYA FITRAH AL HAKIM", "L"], ["NIESHA DZAKIYAH AZZAHRA", "P"], ["PUTRI VALENTIN BALQIS ATIKAH", "P"], ["QEISYIFA QUEEN AULIA", "P"], ["RASYA AZZAHRA HIDAYAH", "P"], ["RENDY NUR ARFIANSYAH", "L"], ["REVEN ANGGONO SANJAYA", "L"], ["REZA RAIHAN PAHLEVI", "L"], ["RODIATUL BALGEIST KHOIRONI", "P"], ["ROSIANNA NUR HIDAYAH", "P"], ["SATRIO ADI WICAKSONO", "L"], ["YANUAR AFZAAL FAYZUL HAQ", "L"], ["ZAHRAN ARIF RAMADHANI", "L"]], "XI KULINER 5": [["ACHMAD ZACKY", "L"], ["AKMAL KASTARA TANAYA HANDE", "L"], ["AL JALALUDDIN RUMI MUHAMMAD", "L"], ["ANINDITA VANYA HAPSARI", "P"], ["ANISA FADHIILAH CAHYANI", "P"], ["ARUMI WAHYU WULANSARI", "P"], ["AWANGGA WISNU TRISETIYONADI", "L"], ["AZRA NAFISA NURI SABRINA", "P"], ["AZZAHRA KHANSA", "P"], ["BARAGATUDES HANNURS AFTHA", "L"], ["DWIANA RISQIATUL KHASANAH", "P"], ["FITRIA PELANGI WILDANIA ZAHRA", "P"], ["FIVE DENZA ANDHYGAVA", "L"], ["JIHAN ANINDYA MAHENDRA PUTRI", "P"], ["MUHAMMAD ALAN AL FARISI", "L"], ["MUHAMMAD ALDO JAYA ANDRIAN", "L"], ["NABILA SABRINA KAMIL", "P"], ["NADINDA NURIL MAULIDYA", "P"], ["NAURA AUDISTA", "P"], ["NIRINA AGHNIYA NUSYURA", "P"], ["OKTABIA KEYSHA PUTRI", "P"], ["PUTRI AZZAHRA ZAFITRI", "P"], ["REINA RAHMADHANI", "P"], ["REVANIA ALMIRA FARADILLA", "P"], ["REYHAN DENNY'S SANGPUTRA", "L"], ["RIFKY FIRMANSYAH", "L"], ["SALMA NAFISA", "P"], ["SOFIA NUR AINI", "P"], ["SYAHIDA ILLA AYU MAULANA", "P"], ["TITIS MI'RAJTUS AMALIYAH", "P"], ["WINDA SABRINA", "P"], ["YAN JELSI BILBINA AWANDA", "P"], ["YULIA PERMATA DEWI", "P"]], "XI KULINER 6": [["ACHMAD RIZKY APRIDITO TRISTANO MULIONO", "L"], ["ALFAN INDRA LAKSANAWAN", "L"], ["AYUSYAH FATIMAH AZZAHRA", "P"], ["BAYU RIZQY RAMADANDI", "L"], ["DWI RIZKY INDRIANI", "P"], ["FAJRI SANTOSO", "L"], ["FEBI WULANSARI", "P"], ["FERLYTA REHANNA WAHYUDI", "P"], ["HAMIDA PUSPITA ZAHRA", "P"], ["INDRIANI PUTRI KIRANA", "P"], ["JAYANTI AULIA PRAMESWARI", "P"], ["JESSICA RAHAYU BRILLIAN", "P"], ["JOFITA BERLIAN NADYA PRAMITA", "P"], ["KHANSA TABITA ISTIBRA SAKHI", "P"], ["MEI VIRA FADILA PUTRI", "P"], ["MOCH. ZUHRON FAHRIAL AKBAR", "L"], ["MOCH.HAYDAR IQBAL HABIBALLAH", "L"], ["MUHAMMAD FATH'UL ALIM", "L"], ["MUHAMMAD HAMDHANI AUDZI CHALIM", "L"], ["NABILAH RIFDAH SALZABILAH", "P"], ["NASHWAH ZAHRA AVRILIA", "P"], ["NAYLA PUTRI FEBRIANTI", "P"], ["PUTRI VALENTINA BALGIS RATIFAH", "P"], ["QUINSHA DAVINA RAMADHANI", "P"], ["RENAIA ANINDYA EL GHANI", "P"], ["RIZKY ADITYA PUTRA PRATAMA", "L"], ["SAFA SALSABILA PUTRI", "P"], ["SALVANA DWI OKTANINGRUM", "P"], ["SHINTA MAULANI RACHMADANI", "P"], ["SUSI FIRLI SETYOWATININGSIH", "P"], ["SYAFA ANDINI PUTRI SALSABILLAH", "P"], ["WANDA ROSASALMA", "P"]], "XI PERHOTELAN 1": [["ALVIN DARIUS PRIYAVENO", "L"], ["ANANDA RIFANI SYAHPUTRA", "L"], ["ANDINI PUTRI VALENTINA", "P"], ["ANGEL ROSANA EMILY PRISCHA", "P"], ["AUREL RISKY OKTAVIA", "P"], ["CHRISTIANA ALFIONA CRISTIANA BADUR", "P"], ["CRISTIANA ALFIANA CHRISTIANA BADUR", "P"], ["DANIS WAHYU SYAIFUDDIN", "L"], ["DEBORA CAHYANI PUTRI", "P"], ["ELANG BAIHAQI", "L"], ["FARADISA MUTHIA YASMIN", "P"], ["FERGY CAHYA LINTANG NUGRAHA", "L"], ["FREYA LINTANG AURELIA", "P"], ["JEVON DUVALINO SHOBAQ", "L"], ["JIHANSYAH SURYA GERAILDINO", "L"], ["MARVELINO ZIDANE WIRATAMA", "L"], ["MOCH HADZI SYAHPUTRA", "L"], ["MUHAMAD CANDRA KURNIAWAN", "L"], ["MUHAMMAD ALFAN MAULANA", "L"], ["MUHAMMAD FAIRUS AL-GAZALI", "L"], ["NURYL HIDAYATUN NABILA", "P"], ["PUTRI RIMA ZHAFIRAH", "P"], ["RAFA ALVIANO RAHMAN", "L"], ["RASYA ADITYA", "L"], ["RATU ALTHAF SHAZIA ZULFA", "P"], ["RAZAKY ZABBAR ALKHAISAR", "L"], ["SAFIRA MEYDIFA SALSABILAH", "P"], ["SANDRIENA EVELYN HARNANSYAH", "P"], ["SHAQIRA MAYFIERRA RAHMADANNI", "P"], ["SYIFA AULIA PUTRI IRAWAN", "P"], ["TANTRY MARCELLA PUTRI", "P"], ["TRI LAKSMI WAHIDIYATI", "P"], ["VALENTINO RIFFAT JAZMISYAH RAZIQ", "L"], ["VIRSHANDA NURANI AURELIA", "P"], ["ZAHRAH FIKRIYAH AMRULLAH", "P"]], "XI PERHOTELAN 2": [["ADITYA DWI FATTORIZQI", "L"], ["ALDO APRIL RIANTO", "L"], ["ALMIRA RHEISYA KURNIAWAN", "P"], ["ANISHA GITA RAMADHANI", "P"], ["ATALLA KURNIA PUTRA", "L"], ["AVRYLLA RAHMA CAHYA MUTIARA", "P"], ["CARENINA NARINDY PRAMITHA", "P"], ["CHELSEA KEYZA ZALZALIA", "P"], ["ELIZABETH AGATHA CHRISTY", "P"], ["EVANIA GANES LYDIA", "P"], ["FENY ANATASYA ARIFIN", "P"], ["HANISA RAHMA FARADILLA", "P"], ["JIHAN NABILLA AL'ILILYIN", "P"], ["KARTIKA PUTRI SANUSI", "P"], ["KEYZA MARETA RAHMAWATI", "P"], ["KHANSA NARAYA SANNI PUTRI", "P"], ["LEONELL DAVID ARIYANTO", "L"], ["MOCH SYAHRIEL ZUHRI RAMADHAN", "L"], ["MUFIDA SASABILA KURNIASARI", "P"], ["MUHAMMAD AWALUDIN BIMANTORO", "L"], ["MUHAMMAD BILAL FAJRUL FALAH", "L"], ["NAYSA RAHMA ERLINKA", "P"], ["OLIVIA JASMIN DEWI WULAN SARI", "P"], ["RASYA FATHIR ARIFIAN", "L"], ["RIDHO PERDANA SAPUTRA", "L"], ["RUSMA EKA APRILIA", "P"], ["SALVA NOVIANA PUSPITA SARI", "P"], ["SALWA TRISIA DIERAFENDI", "P"], ["SAMUEL ANDREW", "L"], ["SAVIRA SETYAWAN PUTRI", "P"], ["SHIFA APRILIA", "P"], ["STEPHEN SABASTIAN JOSHSTAM EMMANUEL", "L"], ["SYAFA ADELIA PUTRI", "P"], ["VRILIANDIA IRANOZA ISMAIL", "P"], ["WISNU FATHAN KESUMA", "L"], ["YOVIRA HANNISA FIRLY", "P"]], "XI PERHOTELAN 3": [["AHMAD DAFFA ALVIANSYAH", "L"], ["ANDRA SETYA WAHYUDI", "L"], ["ANGGUN JESSICA MEIRA", "P"], ["BIMA FARRAS SAPUTRA", "L"], ["BRIAN ABRAHAM SAHID", "L"], ["DENDY PUTRA PRATAMA", "L"], ["DEVITA SARI", "P"], ["ERVINA PUTRI AULIA", "P"], ["FAIZUL AZAM FAHRI", "L"], ["FREYA AURELIA NURSHAFIRA", "P"], ["HEIKAL RIRI ANDIKA RASY", "L"], ["HIMAWAN RADITYA WIJAYA", "L"], ["INDY KAMILA", "P"], ["JANEZCA KYRANA OCLYAZZAHRA", "P"], ["MOCHAMMAD ALFIANSYA", "L"], ["MOHAMMAD JIBRIL ASSEGAF", "L"], ["MUHAMMAD IKHSAN", "L"], ["MUHAMMAD NAUVAL SATRIA APRILIANO", "L"], ["MUHAMMAD RIDHO SUKISNO", "L"], ["MUHAMMAD SULTHON ARIFIN", "L"], ["NOVA RIZKY TRIANTO", "L"], ["NUSHROTUL FAJRIYAH", "P"], ["NYIMAS NANDA FITRIANI", "P"], ["PRIMAS RIZKY PRATAMA", "L"], ["PUTRI SAFIRA RAMADHANTI", "P"], ["QUEENA MARYAM NAIYIRA WARDHANY", "P"], ["RAFI OCTO ISTIAWAN", "L"], ["SABILQIS AFDUL KHARIM", "L"], ["SATRIYA WAHYU ARIANSYAH", "L"], ["SHAFA TAMA ADITYA", "L"], ["VALENCIA JOLINDRA HARUM NASWA", "P"], ["VELLICHA", "P"], ["ZASKIA AURELIA PUTRI", "P"]], "XI PERHOTELAN 4": [["ALDWIN HAFIDZ HARSANDY", "L"], ["ANANDA AULIA", "P"], ["ANANDA AUREL MUCHLISYIN", "L"], ["AURELIA JASMINE", "P"], ["AYU SARI NINGSIH", "P"], ["CHUSNUL CHOTIMAH", "P"], ["DEBBY SANDRA KIRANA", "P"], ["DEVI SHAFIRA ERYANTI", "P"], ["DILA AISHA", "P"], ["FARID ANDYRA SYAHPUTRA", "L"], ["GLADISTA MIKE ZASKIA", "P"], ["HENDRI TRIYANSAH", "L"], ["IBRAHIMY DHANI AL IPIER", "L"], ["ILHAM ARI NUGROHO", "L"], ["JIHAN ZAVIAHIRA SYAMAWAN", "P"], ["JUNIYA PUSPITASARI", "P"], ["LUTVI NARKO", "L"], ["M. IMAM", "L"], ["MOCH FACHRY RAMADHAN", "L"], ["MOHAMAD AKHMAL KOMARUDIN", "L"], ["MUHAMAD PUTRA ERLANGGA", "L"], ["MUJIBUR ROHMAN", "L"], ["NASYWA SALSABILA RAHMADANI", "P"], ["NINDYA AULIA AZIZAH", "P"], ["NINNDY NOVELLA SEPTYANA", "P"], ["NUR AINI", "P"], ["RAYHAN SHAFANA", "L"], ["RIDHO DWI APRIYANTO", "L"], ["ROFIE HIDAYAT FATHANSYAH", "L"], ["RYOHITOMY SHIMADA SURYA SAPUTRA", "L"], ["SATRIA ELNINO HAFIZ RAMADHAN", "L"], ["SUBHAANALLAH PUTRA MAHADI", "L"], ["SULTAN NAJAWA SILVA", "L"], ["WISNU TANU WIJAYA", "L"], ["YUDHA PERMANA PUTRA AGUNG", "L"]], "XI ULW 1": [["AHMAD DZAKI AHNAV", "L"], ["AIRIN QUINSHANI SAHADEWI", "P"], ["ANINDYA DYAH AYU PINASTI PUTRI", "P"], ["ANITA WAHYU FEBRIYANTI", "P"], ["ARKAN ATTALA MUSYAFFA AIDID", "L"], ["ASSYIFA CHOMAYROH", "P"], ["AURELLIA JIHAN MAHESWARI", "P"], ["BAGAS MAULANA PUTRA PRAYITNO", "L"], ["BALQUES ARETTA JASMINE", "P"], ["DEDE DWI RIADI", "L"], ["DEVAN ACHMAD", "L"], ["DINDA FAIRUZ IZZATI EFENDI", "P"], ["EMELLY PUTRI KASIDI", "P"], ["ERLITA AGENG FITRIYANI", "P"], ["FALIH ZAKI ARRAFIF", "L"], ["FARAHIYAH NAFIDZAH", "P"], ["GRISELDA EARLENE MARITZA", "P"], ["HANUM SYAWALIA CALE", "P"], ["IMROATUL MUFIDAH", "P"], ["KEILA PUTRI RIDA DESWITA", "P"], ["KHUSNUL KHOTIMA", "P"], ["MASHABI TRIPUTRA NA'AM", "L"], ["MEILVANO DANDY REVAN COLIS", "L"], ["MOCHAMMAD JABIR DHIYAUL HAQ", "L"], ["MUHAMMAD ISMAIL", "L"], ["MUHAMMAD SETIYO ARUM", "L"], ["NABILA AYU HARIYANI", "P"], ["NADHIFA SALSABILA", "P"], ["NARENDRA MARVELLO ADYAN PRATAMA", "L"], ["NOVELIZA AURA PUTRI", "P"], ["RAFA ILYASA ARIFIN", "L"], ["SAKYA ANINDYA DEVI", "P"], ["SHEVILLA GALVIS", "P"], ["SHOFIYA SALSABILA", "P"], ["SYAFINA LAKSMI DEVI", "P"], ["YOGA SAPUTRA HUTAMA", "L"]], "XI ULW 2": [["ADHA RAKYAN RAKASIWI", "P"], ["ADINDA JANNY TYA MAHA SUCI", "P"], ["AFDAL MAULANA ZAINUL ARIFIN", "L"], ["AIMEE SHARON JECONIA", "P"], ["ANANJAYA", "L"], ["ARFIANSYAH", "L"], ["ASSYFAIRA PUTRI ARFAH", "P"], ["ATHENA ZYVYRA LADY CANTIKA", "P"], ["AYU MAULIDIYA", "P"], ["BENNY SAPUTRA", "L"], ["DIVO YOGI PRATAMA", "L"], ["FARIZQA AZZAHRA", "P"], ["FUTRAS ALIF FACHRUROZI AL GHIFARI", "L"], ["IMAM SYAFI'IH", "L"], ["MARKUS AORELIUS GLEN ABADI", "L"], ["MOCHAMAD AL ZIKRI AVIANO", "L"], ["MOCHAMMAD RAFA ROMADHONI", "L"], ["MUHAMAD SOLEH ABIDIN", "L"], ["MUHAMMAD MAULANA MUSLIM", "L"], ["MUHAMMAD TORIQ FIRDAUS", "L"], ["NADIA PUTRI SARASWATI", "P"], ["NAURA WACHIDA SALSABILA", "P"], ["NAYFA AMIRAHANA", "P"], ["NURAINI KESYA VALENTINA MAHARANI", "P"], ["OKTA WAHYU FIRMANSYAH", "L"], ["PUJI LEO SAPUTRA", "L"], ["QUEENA QUANEISHA HERMANTO", "P"], ["RISMA JULIA ARIYANTI", "P"], ["SASKIA BUDI PRATIWI", "P"], ["SHOUMI AMALIA DIANKA", "P"], ["SITI ZULAIKA APRILIANI", "P"], ["SYAFA AYU NUR FARIKHAH", "P"], ["TIARA KARUNIAWATI", "P"], ["VICKO SEPTIAN RAMADHAN", "L"], ["VINDY DIAN PITALOKA", "P"], ["ZENNY ZAHROH NUR RAMADHANIA", "P"]], "X AKUNTANSI 1": [["ABDUL MUGHNIY NARARYA IRAWAN PUTRA", "L"], ["ADINDA LUTFIA SALSABILA ASMANU", "P"], ["AISYAH PUTRI", "P"], ["AMEERA JASMINE SALSABILA", "P"], ["ANGEL FREDELLA ARFIANSYAH", "P"], ["ANGELA CRISTIANI", "P"], ["APRIL AULIA SETIASE", "P"], ["ARINDRA SHINTA NUR RIZKIA", "P"], ["CLARISSA AYU QATRUNNADA SALSABILA", "P"], ["DIMAS SATRIYA PUTRA WIJAYA", "L"], ["EMBUN PUTRI RINJANI", "P"], ["FARIS ABDUL RAHMAN SHALEH", "L"], ["FELICIA ELENITA", "P"], ["HABSYI RIZQULLAH ZAIN", "L"], ["INDIRA PUTRI ARDELINA", "P"], ["IQLIMA RATU ALMIRA", "P"], ["JAUZA ZAHRA AFRILIA", "P"], ["JEVOHN ANDRA PRATAMA", "L"], ["KANAYA LAILATUL MUKARROMAH", "P"], ["LUCREZIA CHARLLOTE GABRIELLA", "P"], ["MARETHA ADELIA PASHA", "P"], ["MEHRUNIZA PURI AZKADINA", "P"], ["MOCH.DENNY SETIAWAN", "L"], ["MUHAMAT DESTIAN SURYA SAPUTRA", "L"], ["NAJWA OLIVIA MAHARANI", "P"], ["NASYA MARIANDA PERTIWI", "P"], ["NATASYA SALSABILLA", "P"], ["OKTAVIA PUTRI WIJAYA", "P"], ["QURROTA A'YUN RAHMAH HIDAYATI", "P"], ["RIZKY RIDHO SHOBARIN SYAKUR", "L"], ["SAFIRA UMI SA'ADAH", "P"], ["SHALIEZA AULIA HAMIDDIN", "P"], ["SHELLYNE MAYSI QUEEN", "P"], ["ZAHRA ELVARETTA AZZARINE", "P"]], "X AKUNTANSI 2": [["AISYAH SISILIA PUTRI", "P"], ["AJENG RARA SASTRO DANISAH", "P"], ["ALVIN HARIYANTO", "L"], ["AMANDA ALNURI AZKIYA PRADINI", "P"], ["ANI RAHMAWATI", "P"], ["AULYA PUTRI BUDIARTI", "P"], ["AURA KAMILIA", "P"], ["BAGUS ARDIANSYAH SLAMET RAHARJO", "L"], ["DAFFA RADITYA PUTRA PRATAMA", "L"], ["DIANDRA CANTIKA PUTRI APRILIA", "P"], ["EILEEN YUSI FAIRUZ", "P"], ["FAUZIYYAH RAMADHANI", "L"], ["FIRZY DWI NUR ISLAMIAH", "P"], ["GITA AULIA RAMADHANI", "P"], ["HAFIZHUL ZAHY", "L"], ["INDI AMELIA FEBRIYANI", "P"], ["JACINDA MULYAWATI", "P"], ["KEYSHA ZHAHIRAH PUTERI", "P"], ["LINTANG AYU NUR AINI", "P"], ["MEYSHA PUTRI STEVANIE", "P"], ["MILANI RABGLILAH AMEUTDYA", "P"], ["MOCH. DHARMA HADI PRATAMA", "L"], ["MUHAMMAD RIFQI ARDIANSYAH", "L"], ["NAJWA DAYU SAFIRA", "P"], ["NENCY APRILLIA PUTRI LIZANA", "P"], ["NISRINA ALYSIA NABIQAH", "P"], ["NOVI ANASTASYA SUNYOTO", "P"], ["PUTRI DEWI NURHIDAYAH", "P"], ["SALWA SYAHADATUL ALAMANDA", "P"], ["SANIYA PUTRI AZHARA", "P"], ["SITI ALIYAH SAFIRA", "P"], ["TAGSYA ZAHROTILLAH", "P"], ["YULIANA NAZWA SAFITRI", "P"], ["ZIVARA WULAN SYAFIYAH", "P"]], "X DESAIN BUSANA 1": [["ANGGELIA COTUS WANGGE", "P"], ["ATANI AZMI", "P"], ["AURELLINA NUR RAMADHANI", "P"], ["CHARISSA PUTRI", "P"], ["DINDA AYU PUTRI VIENDRA", "P"], ["DIVA PUTRI NOVIANA", "P"], ["ELVINA ELIZABETH YEREMIA SIEDHARTA VINA", "P"], ["ELYSIA SANDIRA", "P"], ["EMILLY LETHISYA RAHMAD", "P"], ["FAREA HILMIT ATHAUR RABBANI", "P"], ["FATASHIA ZIVA GAVRILA", "P"], ["GYTHA SOMANDIAH PUTRI", "P"], ["KEISYA SALSABILLAH PUTRI", "P"], ["LINDA PUTRI", "P"], ["MAIDA SUSAN DHABITA", "P"], ["NAASYATAS ARTA SELIYA", "P"], ["NAFA PUTRI RAHAYU", "P"], ["NATASYA ADINDA SAPUTRI", "P"], ["NAYLA WIDYA RAHAYU", "P"], ["NAZWA ASSYIFA AZZAHRA", "P"], ["NUSAIBAH AMNI PUTRI ISTIQOMAH", "P"], ["PRAMITHA MAHARANI", "P"], ["QORYFELLA NUZULLIA RAMADHANI", "P"], ["RIZKI AYU AMALIA", "P"], ["RR. NAYLA ARTANTI PUTRI", "P"], ["SALWA KALYCA SURINAWATI", "P"], ["SANTI NURIYAH APRILYANI", "P"], ["SELVY ELLYSIA DARSONO", "P"], ["SEPTYAN IKHSAN MAULANA", "L"], ["SEVILLA PUTRI ANDINI", "P"], ["THALITA ZERLINDA IVANA", "P"], ["VANESSA CARENT ANGELICA PANGARIBUAN", "P"]], "X DESAIN BUSANA 2": [["ADELIA AL KALIFAH CALLYSTA", "P"], ["AISYAH SYIFA AZZAHRA", "P"], ["ALIYA NAWLA CINTA WIDYADHARI", "P"], ["ALMIRA MARSYA NATSUMI", "P"], ["DINI AMELIA PUTRI", "P"], ["DIVA DWI MEIRISYAH", "P"], ["EMILY AULYA NABIL", "P"], ["ENOLA YASMINE KUSWOYO", "P"], ["FATIHAH ROHMAH", "P"], ["FIRYAL ALEESYA TSANY", "P"], ["GHEARISTA KHOLIFA IGNACIA", "P"], ["KEYLA PUTRI RAMADANI", "P"], ["LAILA NUR SALSABILLAH", "P"], ["MARIENCHA VALE TALINA ROSSI", "P"], ["NAJWA QORRY AINA", "P"], ["NASYA SYIFA NUR AZ-ZAHRA", "P"], ["NORHASANAH", "P"], ["NOVIA PUTRI MAHARANI", "P"], ["NUR MAULIDYA", "P"], ["PUTRI AULIA SYIFA'UL QULUB", "P"], ["QEYSHA PUTRI FADHILA", "P"], ["RASYAH CALLYSTA BELVA", "P"], ["RENATA APRILIA PUTRI", "P"], ["RIKE KHOFI ABINAYA", "P"], ["SABRINA HUSNIYA", "P"], ["SAFA QUENU RAMADHANI", "P"], ["SALWA DWI AULIA SARI", "P"], ["SITI FATIMAH AZ-ZAHRA", "P"], ["SZAHFITRI ANDIK PURNAMASARI", "P"], ["YELIN SARASWATI ANDINI ARUM", "P"], ["ZAHIRA OKTAVIA", "P"]], "X DESAIN BUSANA 3": [["AMANDA SAGITA PUTRI", "P"], ["ANA ALIF KATHRIN NADA", "P"], ["ARIFA TRY ANDANI", "P"], ["ARVIA RHEIHANNA", "P"], ["ASYIFA DHARNAWITANINGSIH", "P"], ["AZALIA BELVA AYU RASHIDA", "P"], ["CLARESTA  ZAFIRAH RIDHATUL AIS'Y", "P"], ["DESWITA PUTRI YANTI ASHARI", "P"], ["ERFINA PUTRI ANDINI", "P"], ["FARAH SABILLIA PUTRI", "P"], ["FITRIA NUR AINI", "P"], ["FUTIYA LAILATUL WAFIRO", "P"], ["GHEARISTI HAFHIZA IGNACIA", "P"], ["GHENDIS SEKAR AYU", "P"], ["KHALILA ALYA HABIBAH", "P"], ["MARSYA HUMAIRA PUTRI NUGRAHA", "P"], ["NABILA NUR ISTIQOMAH", "P"], ["NADHIFA ASYIFA RAMADHANI", "P"], ["NAJWA ANGELINA PUTRI", "P"], ["NAYSILLA ZAHRA MAULIDA", "P"], ["NUR FITRIA RACHMAN", "P"], ["QUEEN BEE RIZKY ERIDANI", "P"], ["RIRIN SALMAULUDIAH", "P"], ["RIZQA NIKMATUL FITRI", "P"], ["SHAFA DHAMA KHOIRUNNISA", "P"], ["SHEYLLOMITA MARTHAZAKI", "P"], ["SIFA NAZAROH PUTRI", "P"], ["SITHI MUTHMAINNAH", "P"], ["SYAFARA KENZIE PUTRI ERIKA", "P"], ["TYAS AYUNING PAMUJI", "P"], ["VIONIE KARTIKA PUTRI", "P"], ["ZETTA OCSA AGUSTINA", "P"]], "X DESAIN KOMUNIKASI VISUAL 1": [["FIDELIS SATRIYO APRIAWAN", ""], ["AKBAR PUTRA SYAH ROSA", "L"], ["AKMAL HILMI ATHAYA", "L"], ["ARIANI KHAIRUNNISA", "P"], ["ASMANIA NIRMALA", ""], ["AYESHA NASANIN", ""], ["BELOVA DERVISH WIBOWO", ""], ["DZAKY CHESTA ADABI", "L"], ["FADHIL FATHUR RAHMAN", "L"], ["FADIL RADITHYA KURNIAWAN", "L"], ["FARZHA PRAMANA JOKO PUTRA", "L"], ["GILLIAN PETRA MELODIC", "L"], ["KARINA AURELIA PRIYAMBODO", "P"], ["KELVINO IRAWAN ARDIANSYAH", "L"], ["KHRISNA PATRA RAKHA FAUZAN", "L"], ["KHUMAIROH FALASIFA", "P"], ["M AKBAR ILHAM MAULANA", "L"], ["MAYDYA MULYA MAULIDA", "P"], ["MOCHAMMAD WILDHAN ALFRIZHIO", "L"], ["MUHAMMAD FARHAN RIZKY PUTRAWAN", "L"], ["MUHAMMAD ILHAM AJI SAPUTRA", "L"], ["MUHAMMAD KHAYSAL AMIRULLAH", "L"], ["NAIZZAH TSALITSA NUR NAJMI", "P"], ["NARARYA DHANANJAYA ILUMAR MUCHTAR", "L"], ["NIZAM ATHALLAH RAHADIAN", "L"], ["PUTRI SYAKIRAH HAKIM", "P"], ["RAHMAT DEDIK SETIAWAN PUTRA", "L"], ["RAMA DWI ALDYANSYAH", "L"], ["RENDY AZZAM MAULANA", "L"], ["RESTOE BUMI DANADYAKSA", "L"], ["SEPTRIANA NURFIDA", "P"], ["SHEKINO GLORY REVAYO", "L"], ["SHITARA ERSYA FITRIANA", "P"], ["VINOKI AYODHYA NI'MATURROMAH", "P"]], "X DESAIN KOMUNIKASI VISUAL 2": [["ALWIYATUSSOLICHAH", "P"], ["ANGGA ADI RAMADAN", "L"], ["APTA ANDHIKA XAVIER", "L"], ["ARDELLIA FREDELLINA ISAURA RUSMANSYAH", "P"], ["ARDIANSYAH PUTRA HARAS", "L"], ["ARIF YUSUF ADITYAWAN", "L"], ["AUREL RIZKY BRILIAN PUTRI", "P"], ["ERLINTA RISKA CHANIFADDINA", "P"], ["ESHAAL HABRI HAFIZY", "L"], ["FADHIL AZA RAMADHAN", "L"], ["FARAH AMIRAH PUTRI SYAIFUDIN", "P"], ["GELVINO PRATAMA", "L"], ["M. AKHDAN FIRDAUS ALKHAZIM SAHADY", "L"], ["MOCH.KRISNA DIKA PRATAMA", "L"], ["MOCHAMAD ALIFFARDU DHARMAWAN", "L"], ["MUHAMMAD KHUSAINI ARMANSYAH FARELDI", "L"], ["MUHAMMAD LABASSIM QOISHADIN", "L"], ["MUHAMMAD RAIHAN RHIZANDA PUTRA", "L"], ["MUHAMMAD RIDWAN PUTRA PRATAMA", "L"], ["NAURAH IZZAH INSYIRAH", "P"], ["NAZRIL FARIS PRATAMA", "L"], ["NAZWA DEWI KUNTI ARALLY", "P"], ["NIA RAMADHANI", "P"], ["QALESYA ALEEYA MAULIDDIEN", "P"], ["RAMANDA DILKY SETIAWAN", "L"], ["RASYA MICHEL RAMADHANI", "L"], ["REGITA SLAVINA", "P"], ["REVALDO AGUNG PRASETYA", "L"], ["REYHAN KEANU ZHEANANDA", "L"], ["SALWA SALSABILA CARISSA PUTRI", "P"], ["SYABRIA DITYAS AN NAJWA", "P"], ["THALITA ELVINA MARITZA", "P"], ["VINA MEI NADINE", "P"], ["VIO AUGI PRAMADHANA", "L"], ["ZANUWAR HENDRA SAPUTRA", "L"], ["ZHAFIRA QURRARU AINI", "P"]], "X KSP 1": [["AFELINA CALISTA PRITY", "P"], ["AGNI KURNIA PUTRI DARMAWAN", "P"], ["ANGELLYA LAURENT ABIGAIL SANTOSO", "P"], ["CALLYSTA NATHANIA HERMAWAN", "P"], ["CHACA DESTA REGINA PUTRI", "P"], ["DOMINIQUE FLAVIA GERALDINE", "P"], ["DYAH AYU ANDINI", "P"], ["EFA NUR FADILAH", "P"], ["ELOK ATHA SYAHRINI", "P"], ["ESTER ERANANDA PELLO", "P"], ["FAHIRA HADAN CAHYANI", "P"], ["FARAH AULIA RAMADHANI", "P"], ["FRISKA NUR FADILAH", "P"], ["GADIZA AMALIA PRINCESSA ERMA WIBOWO", "P"], ["KHONITA DWI CANTIKA", "P"], ["KIRANA NOVITASARI", "P"], ["KIRMAYA GITA DWIQOTRUNNADA", "P"], ["MAZRA'ATUL AKHIRAH", "P"], ["MEGA PUTRI PRATAMA", "P"], ["NABILA HUSNA PUTRI", "P"], ["NADHIFAH DWI HARNIANTI", "P"], ["NADYRA ELFINA RAHMAWATI", "P"], ["NAILA KHIRANIA PUTRI HERIYANTO", "P"], ["NOVITA ERNI SAFITRI", "P"], ["OREN ISMIRA", "P"], ["RINDIANI PUTRI ANTIKA", "P"], ["RISCA ALHALIIMU APRILIA", "P"], ["RISMA ADELIA PUTRI", "P"], ["SHELLOMITHA RIZKY RAHMADHANI", "P"], ["SHIFA PUSPITA SARI", "P"], ["SILVIANA NUR SASMITA", "P"], ["SOFI ANANDA ZIVILIA", "P"], ["TALITHA FITRI ATHAYA NURJANAH", "P"], ["ZELDA SAFANOVA ANIELA", "P"]], "X KSP 2": [["DHIYA ULHAG RAHIIDAH", "P"], ["AIRIN SABILAH ROSYADA", "P"], ["AMIRA MAYDINA PUTRI ISKANDAR", "P"], ["ATIKAH BALQIS AZIZAH", "P"], ["AUDRIE RAFAEL RIFAI", "P"], ["AULIA AMBARWATIN", "P"], ["BINTANG AURA KHANZAH", "P"], ["CANTIKA KUMALASARI SANTOSO", "P"], ["DEA SASKIA SAFITRI", "P"], ["DELIA SENDY OKTAVIANA", "P"], ["DEVITA JELITA ABDE", "P"], ["GLADYS JANUARTA", "P"], ["INAYAH ARUM KUSMARINI", "P"], ["KEYLA PUTRI BUDIONO", "P"], ["KHAIRA ASYIFA PURNOMO PUTRI", "P"], ["KHONSA ANINDYA N", "P"], ["KIRANA LARASATI", "P"], ["MARITZA ELENA ZILFANI", "P"], ["MUFIDAH", "P"], ["NABILA JACINDA DAMARES", "P"], ["NAILATUL HIDAYAH", "P"], ["NISAIFA AULIA FATIMAH AZ-ZAHRA", "P"], ["NOVI TRI DEVI", "P"], ["NYAN SAFFA YOUANNA", "P"], ["PUTRI WULANDARI", "P"], ["QUEENZA CLEARIST SAFITRI", "P"], ["REGINA SARASWATI", "P"], ["RENATA APRILIAN ZAHIRA", "P"], ["REXANALIN JULIA WANGSA", "P"], ["SAFA ADHELIA PUTRI MAGHFIROH", "P"], ["SEKAR AYU KURNIASARI", "P"], ["SHANNON ATHA HAJAR N.", "P"], ["SYATHIRAH NASYWAH NOICHA SARI", "P"], ["THALITA SADINAH HASNA HUMAERAH", "P"], ["VIONA WAHYU ENGGAR PALUPI", "P"]], "X KSP 3": [["AILEN TERY VERINA HAYU", "P"], ["ANGELINA FRISKA AMAURI", "P"], ["ANYA MUMTAZ AHIFA", "P"], ["ATHAYA FARA SHABRIENA", "P"], ["AURA DINDA PRAMESWARI", "P"], ["AZZARINE FAUSTA AHMAD", "P"], ["CHELSY LIWANDA FASHA PUTRI", "P"], ["CINTYA PUTRI SALSABILA", "P"], ["DENISA AYU ANGGIA PUTRI", "P"], ["DEVI ANGELINA MAHARANI", "P"], ["DEVINA QUEEN", "P"], ["GLADYS REGINA PUTRI SETIAWAN", "P"], ["HAFIDZAH QUEENINA PARFEZ", "P"], ["JENNY ROSALIA", "P"], ["KANSHA AYU FEBRIANTI", "P"], ["KARINA FAYZA AZZAHRA", "P"], ["KARINDA VENI AMELIA", "P"], ["MEIRISKA PUTRISIA SANTOSO", "P"], ["MUTIARA MAQFIROH", "P"], ["NABHILA ALYA ZAKIYAH", "P"], ["NAJLA AFISKA DELIA", "P"], ["NEYSHA NAFEZDHINTA AZZAHRA", "P"], ["NIRWANA FEBI ANDINI", "P"], ["OKTANIAR MAHARANI", "P"], ["RACHELL ARYANI", "P"], ["RAIHANA FAIRUZ JAMILAH", "P"], ["REEFALIA CHOIRUN NISA", "P"], ["RIZKA SYAFIRA RAMADHANY", "P"], ["SALSABILA TSAMARA ADINDA", "P"], ["SAVIA ATHA ZEOVANNA", "P"], ["SEKAR ARUM SAIKU MUSYAROFAH", "P"], ["TIFANNY SUKMA BULAN ASMORO", "P"], ["VANETA SUKMA ANGGARI", "P"], ["VILLIA SAFANI", "P"]], "X KULINER 1": [["CELSIH ANJALIA KEHSIA", "P"], ["AIRA AVRILLITA SALWA", "P"], ["AISYAH NAYLA FARRA", "P"], ["AZIZAH AYU PUTRI KHOLILAH", "P"], ["CELLY DWI ANDIKA", "P"], ["CHEZYA ANDREA PARASKEVI SETYOTOMO", "P"], ["CIKA ADELA", "P"], ["DELYONA VALDAY HELONIA", "P"], ["DYAH SEKAR AYU", "P"], ["EVRILIA EKA RAHAYU", "P"], ["FAIRUZ AULIA ZAHWAH", "P"], ["FAJAR FIKRIANSYAH", "L"], ["FRANSISKUS SURYA PANCA", "L"], ["GADIS ALIFTA FADILA IZZA", "P"], ["IZZATUL AFIFAH", "P"], ["JAZLIN DAVISHA PUTRI", "P"], ["JESSE MAYVINE CHRISTABEL", "P"], ["JHUAN ALVIANO HERMAN", "L"], ["JOYCE MICHELLE", "P"], ["LAURA MONICA NAULI PANGGABEAN", "P"], ["LUTHFIYAH AKALILI", "P"], ["MARSYA MUH PUTRA RUATA", "L"], ["MUHAMMAD BUDI WIJAYA", "L"], ["MUHAMMAD SYAHRIL APRILLIAN", "L"], ["MUTIARA DWI PURNIKA", "P"], ["NABILA SYARIFAH PUTRI", "P"], ["NIZZAM FARHAN PUTRA KURNIA HUDA", "L"], ["PRAMESWARI JESSLYN NABIILATUS SALSABILA", "P"], ["RACHA ZHAFIRAH", "P"], ["SABILA ANJANI", "P"], ["SAFA ALZENA FARRAS", "P"], ["TITARIFANIA PAMELA APRILIA", "P"], ["WISANGGENI PURBO AGALAKSONO", "L"], ["YOGI AGUS ADE YAKSA", "L"]], "X KULINER 2": [["ADELIA DWI PRASASTI", "P"], ["AISYAH NUR ROHMAH", "P"], ["AISYAH SAFA PUTRI SETYAWAN", "P"], ["AL ABRAR NIFTA FARRELY", "L"], ["ALETTA AULIA PUTRI", "P"], ["ANDALINE REZINA BILQIS", "P"], ["AZZARINE SALMA ANINDITA", "P"], ["CHARLENITA RAISKA AYUNI", "P"], ["CINTA DEWI MAHARANI", "P"], ["DAFA LUTFI PUTRA ARDANI", "L"], ["DEVINDA FEBRIANA KHEYLA", "P"], ["ERICA KIRANA LARASATI", "P"], ["FALIH AMMAR MAULANA", "L"], ["FEBRIANA ARTIKA SARI DEWI", "P"], ["GALANG PUTRA PERKASA", "L"], ["INTAN AURELIA BIQI WIBOWO", "P"], ["IRHAM WASIS HASWORO", "L"], ["KAYLA LIDYA ALMAVIRA", "P"], ["LANNY SHAKILA AZ ZAHRA", "P"], ["MUHAMMAD DEVVIS ABDULLOH", "L"], ["MUHAMMAD HASYIM RACHMAN", "L"], ["NABILA ZAHRA", "P"], ["NADILA PUTRI ANGGRAINI", "P"], ["NAVIN GILANG RAMADHAN", "L"], ["NAYLA AZAHRA HAEDAR", "P"], ["PUTRI ANNISA KURNIA SARI", "P"], ["RAFFA ABIYYU AQIL", "L"], ["RATU AMRETTA KALYANI", "P"], ["RIHA FIDELIA ANJANI", "P"], ["SAFA NAZAROH PUTRI", "P"], ["SALSA BILLA AMANDA PUTRI SUSTIONO", "P"], ["TRI AMANAH SUKMA", "P"], ["VIRLIA ANISA ARSITA AGUSTIN", "P"], ["ZAHIR RIZQI DANASWARA", "L"]], "X KULINER 3": [["AYDHELWAYS FICYLIAN PUTRI VIENRIE", ""], ["ADINA AZ-ZAHRA", "P"], ["AIDA RIZKYLA FILACARDI", "P"], ["AISYAH RAHMA WIJAYA", "L"], ["ALMIRA PUTRI WAHYUDI", "P"], ["ALVARO ALFAREZEL ANCHAFI CHANDRA", ""], ["ANANDYTA NOVIA PUTRI PRAMUDJA", ""], ["BILQIIS DWI AGISTA", ""], ["CHARISSA JEEHAN AULIA", ""], ["DAVI ADITYA PANGESTU", ""], ["DAVINO JUNIOR KURNIAWAN", ""], ["DEVINA AGUSTIN RAMADHANI", ""], ["DYAH AQILAH PAWESTRI", ""], ["ENGGELY JULIESCA PUTRI ANDREAN", ""], ["FARAH NISA ELICIA", ""], ["HIKMAH FEBYNUR AZIZAH", ""], ["KHANSA ALIFAH AZAHRA HANY", ""], ["MADINAH AZKIA AISYAH PUTRI", ""], ["MUHAMMAD AKBAR ISMAHYUDI", ""], ["MUHAMMAD ALIF ARRASYID", ""], ["MUHAMMAD WILDAN FIZY ALFAIRUS", ""], ["NAGITA SLOVAKIA", "P"], ["NAILA ATIKA ZAHRA", "P"], ["PRADITA ZAKARIA ENDRIYANTO", "L"], ["PUTRI EKA RAMADHANI", "P"], ["RAFFA YUSUF PRATAMA", "L"], ["RANA ASHYA JATMIKO", "P"], ["RARA SEPTIANI ORLYN", "P"], ["RAYA DWI TITANIA", "P"], ["SARI NURZIAH", "P"], ["SHAFA AGYSTA VIRSHANDA", "P"], ["TIARA DWARA NURNIRMALA", "P"], ["YUANDA DIYAH NUR'AINI", "P"]], "X KULINER 4": [["AISYAH HUMAIRA", "P"], ["ALINA DWI FITRIYANSYAH", "P"], ["ALVINO PUTRA HADI", "L"], ["ANNISA DEVY KARTIKASARI", "P"], ["APRILIA VERADININGRUM", "P"], ["AQEELA TITANIA LYNETTE", "P"], ["BAHIUDDIN AL MASHURI", "L"], ["CANTIKA TRI WULANDARI PRIAGUNG SAPUTRI", "P"], ["DAHAYU ATIQ FAIRUZIFRIANTI", "P"], ["DHIYA' KHOIROH AZZAHROTUL FIKRIYAH", "P"], ["EARLYTA FAIHANSA PUTRI NURVA", "P"], ["FADHIL SOFIAN HABIBI", "L"], ["FEBRIANI HIDAYAH JUNIAR", "P"], ["FELISA ANUGRAH SETYA PUTRI", "P"], ["HAFIDZAH AINUR ZAHRA", "P"], ["IRSYADUL IBAD HIDAYATULLAH", "L"], ["KHOIRUNNISA AMALA UMAILUL ULUM", "P"], ["LUTF PARSYA HAITHAM DAANISH", "L"], ["MALIKA TALITA ZAHRA", "P"], ["MOHAMMAD FRESKI NUR SEPTIAN", "L"], ["MOHAMMAD RISQY", "L"], ["MUHAMMAD AGHIL MAULANA", "L"], ["NAILA IZZAHTURRAHMA", "P"], ["NAJWA SYARIF", "P"], ["NAYLA PUTRI PRASAYU", "P"], ["NUR QOMARIYAH ROMADHONI", "P"], ["PUTRI NILAM SARI", "P"], ["RIZKY HAFIZ SEPTYANSYAH", "L"], ["ROSSONERI RAFA NARENDRATAMA", "L"], ["RUBI NAFTANAYSA WICAKSONO", "P"], ["SHAFA FAIZAH NURIAH", "P"], ["SHAIMA NAFISA FITRI", "P"], ["SYIVA ZHAFIRA", "P"], ["TITHANIA BIMBI ZHAFIRAH", "P"], ["ZASKIA JULIANA PUTRI GUNAWAN", "P"]], "X KULINER 5": [["AISHA MIFZA ALEAZADA", "P"], ["ANDIKHA MOHAMAD RIZQI", "L"], ["ANGEL DWI ZAHIRAH SAKHI", "P"], ["ANISA RAHMAWATI", "P"], ["AQILLA PRAMESWARI", "P"], ["ASYIFA MUTIARA NUR FADILAH SANDI", "P"], ["BADHAR NABIL AMIN", "L"], ["CARISSA AZALIA PUTRI ROSYIDIN", "P"], ["CETTA ADRISTI NAYOTTAMA", "P"], ["DE LUPITA NUR AZKA", "P"], ["DERYANSYAH PUTRA PRATAMA", "L"], ["DIYAH AYU SARIFAH", "P"], ["ELFONDA ALIEF RAMADHAN", "L"], ["FABIAN RASYA WIDAYAT", "L"], ["FENY ADELIA PERMATASARI", "P"], ["FIDELLA AUDYNA AZALIA", "P"], ["GLADYS VENUSIANA DEWI", "P"], ["LAILA AMBARWATI", "P"], ["MARINI DIFA AZ-ZAHRA", "P"], ["MAULANA HIDAYATULOH", "L"], ["MOCH. FAHRIL IBRAHIM", "L"], ["MOCH. RAYHAN SYAHPUTRA", "L"], ["MOCH.FEBRI SETIAWAN", "L"], ["NAYLA ZAHRA MUSYAKINA", "P"], ["NAYSILA WULAN FEBRIANA", "P"], ["NOVIA ARYANING TYAS", "P"], ["PUTRI RAHMADINA APRILLIA", "P"], ["RESPATI PRATAMA", "L"], ["RIFKI GILANG RAMADAN", "L"], ["ROSYADA AULIA ASSYAHWA", "P"], ["SHAQYRA SALSABILA PRAMADHANI", "P"], ["SHEILA HAFSAH", "P"], ["SHIFA KHORIDHATUL HUSNA", "P"], ["ZENNI SEPTIA ABADI RAMADHAN", "P"]], "X KULINER 6": [["AISYA NUR ALIFIA PUTRI", "P"], ["AJZUA KIRANA CHOIRUNNISA", "P"], ["ANDITA KARENINA", "P"], ["AQIELLA NAURA KHANZA TRISTIYA", "P"], ["ARDHITYA MELLANOVAN PRABOWO", "L"], ["ASYIFA NUR MAULIA RAHMADINI", "P"], ["ATTIQAH RIFDAH ALIYYAH", "P"], ["AYDIN ROSYIDIN MAHMUD", "L"], ["AZAHRA WAHYU ANNAFIA", "P"], ["CECILIA FARAH CALYSTA", "P"], ["CINTA ANUGERAH PUTRI YOVISTA", "P"], ["DEBBY REYNAVINZKA", "P"], ["DEVIKA NAURAQILAH HERMAWAN", "P"], ["DHANI PUTRA KURNIAWAN", "L"], ["FIORENZA NOURA NUGRAHA", "P"], ["GARNETA PUTRI NATHANIA", "P"], ["GHELSEA NADHIFAH AZZAHRA", "P"], ["LAILATUL FITRI RAMADHANI", "P"], ["M. VINO KURNIAWAN", "L"], ["MALGORZATA CLAVINOVA CHABOWSKA", "L"], ["MAS NGABEI MUCHAMMAD FIRASI RACHMANSYACH PUTRA DJAYANEGARA", "L"], ["MAULANA HANIF AHMAD ALFATTAH", "L"], ["MILENA ZALFA KAILI", "P"], ["NAYLA UZWA MERIYAWANTI", "P"], ["NAZILLA NUR AMELINA", "P"], ["RAHMAWATI PUTRI KATARINA", "P"], ["RAQILLA FAUZIL SUDARSONO", "P"], ["RISFANI ANINDYA SAFIQAH", "P"], ["RIZKI MUCHAMMAD BINTANG AKBAR", "L"], ["SHERLYN REISHA PURWANDANA", "P"], ["SHEVA AXSAN NUR FIRDAUS", "P"], ["SOVI NUR AZIZAH", "P"], ["VALENTINO DEVIEN ANANIAS", "L"], ["ZHELVIA GISHELLA HADIYANTO", "P"]], "X PERHOTELAN 1": [["ABINA OCTA NAVEEZA", "P"], ["ADILLA ROMADHONA", "P"], ["AIRA MALIKA RAMADANI", "P"], ["ALVIANO FABIAN RIZKIANSYAH", "L"], ["BENEDICTA BETHARI ARYATI KUSUMARDINI", "L"], ["BRYAN GIAN FABIANO", "L"], ["DAFFA HAFIZH FIRDAUSH", "L"], ["DINDA PUJI ASTUTI", "P"], ["ESTYA GAUZHAWA", "P"], ["FABRIAN RAFKA INDARTA", "L"], ["FADHELL ANANDA SUBARI", "L"], ["FARINA SALSABILA RAHMADINA", "P"], ["IDA AYU PUTU KANIYA SHANTI JALASVARI", "P"], ["JHEZZEL MAURITZH", "L"], ["LATISHA NADDA ILENA", "P"], ["LEONELL EDUARDO ELISA", "L"], ["LETYSYAH AGRACIANE RIZALDY", "P"], ["LISHILA AUREL RAMADHANI", "P"], ["M. THO'IFUR RAFIKHIN", "L"], ["MAULANA SATRIA ALAMSYAH", "L"], ["MOCH ZIDAN HADI ILHAM", "L"], ["MUHAMMAD NAUFAL DWI PUTRA", "L"], ["NAUDIFANDIARY MUHAMMAD JULIO BACHTIAR", "L"], ["NAYLA DEWINTA PUTRI", "P"], ["NOVA CHOIRUN NISA", "P"], ["QUEENZA ZALLICA KIRANA", "P"], ["RAHMA AZ ZAHRA", "P"], ["RATNA CHAERUNNISA", "P"], ["RIZKI DWI ADITYA", "L"], ["RIZQILLAH DWIPUTRA ARINTOKO", "L"], ["SATRIA REZA VERNANDA", "L"], ["SITI FAIRUS QONITA SIFA", "P"], ["SUCI RAHMADHANI AGUSTINA", "P"], ["SURYA ANDRIANSAH", "L"], ["TSANIA NADYA PUTRI", "P"], ["VALDO RIZAL MUBAROK", "L"]], "X PERHOTELAN 2": [["ACHMAD SYIFAUL QULUB", "L"], ["AFGAN SHODIQUL HAFIZD", "L"], ["AILEEN PUTRA RAMADHAN", "L"], ["AISYAH NURIDA YULIANTO", "P"], ["ALIYA PUTRI ARIYANTI", "P"], ["AMELIA OCTAVIA AYUCAHYANI", "P"], ["ARYA BAGASKARA", "L"], ["AZZA RAMADHANI PUTRI HERMES", "P"], ["AZZAHRA HAFIDZA HAFSAH", "P"], ["BINTANG OKA SYAHPUTRA", "L"], ["DAVINZA HANGGY HERMANDA PUTRA", "L"], ["DENILA GEFFEN DAMAIANSA", "P"], ["DIKA SAPUTRA", "L"], ["FAUZIYAH", "P"], ["FEBBY FANESA SYABRINA", "P"], ["KAMILA RAMADHANI", "P"], ["KENZA QOLBI RAMDAN HERNATA", "L"], ["LARISA PUTRI SAVIRA", "P"], ["M. THEO FIRMAN VANTORO", "L"], ["MAULANA ADI NUGROHO", "L"], ["MEY AJENG PUTRI SATRIAWAN", "P"], ["MUHAMMAD ARCHARD AKMAL TSANJ", "L"], ["MUHAMMAD BRILLYAN YUSIRIANSYAH", "L"], ["NAZHIRA SYAKILA MAHARANI", "P"], ["NUR FADILLA SAPUTRI", "P"], ["OKTA SETYA AKNESIA", "P"], ["RAFQI ACTAVIANO CAECARIAJI", "L"], ["REGINA ELISYA PUTRI", "P"], ["RIDHO FEBRIANSYAH JAMAL", "L"], ["RIZKI PUTRA APRILIAN", "L"], ["SHINTA YNISTIA PUTRI MAULIDA", "P"], ["SUPRIYADI", "L"], ["TYAS AYU DWI RAKHMAWATI", "P"], ["UFAIRAH RADHWA MA'ARIF", "P"], ["VINA HIKMATUL MAULA", "P"]], "X PERHOTELAN 3": [["ABIAN RAFIF SETYARAMANA", "L"], ["ACHMAD GHILMAN NAFIAN", "L"], ["ALFIN MUBEROK", "L"], ["ALVINO KENZA ISWANTORO PUTRA", "L"], ["ANANDA DWI SELVIA", "P"], ["ANGEL AYU NATALIA TRIADI", "P"], ["ANINDYA AMELIA PARASWATI LUBIANTORO", "P"], ["ARFAN SAHUDI AGIL", "L"], ["AULIA PUTRI PRATAMA", "P"], ["BINTANG NARARYA APRILIO PUTRA", "L"], ["CINTA ERLYA RAMADHANI", "P"], ["DERBY KURNIA SANDHI", "L"], ["DIAJENG BALQIS JABBAR WIBOWO", "P"], ["FREZZA PUTRI RAHAYU", "P"], ["HANIFA ALTHAFUNISA", "P"], ["IBRA GALIH OKTAVIAN", "L"], ["KANSHA NABILA MAYDIANA WURIANTO", "P"], ["KAYLA NASYWA ANINDYA", "P"], ["MOCH.HAFIZ RAMADHANI", "L"], ["MOH. ALFIN", "L"], ["MOHAMMAD GUSTI ASHARI", "L"], ["MUHAMMAD ALIF PRATAMA", "L"], ["MUTIARA RENATA RATRI RAHMAWATI", "P"], ["NADYA SHAFWAH ABIGAIL WANDA PUTRI", "P"], ["NAURA OKTAVIA PUTRI PRABOWO", "P"], ["RAIHAN RADITYA ANWARSYAH", "L"], ["RENATA LARASATI KARIIM", "P"], ["RENOAH MUHAMMAD EL GHANI", "L"], ["RIFKIY MAULANA ALIF", "L"], ["RINDRA ANGGITIYA MUSTOFA", "P"], ["SALMAN MAULANA", "L"], ["SEPTIAN DWI ANUGERAH", "L"], ["YESYKA MIRZA RAMADHANI", "P"], ["ZAHRA ANASTASYA CARRYSTA", "P"], ["ZEHRIS MANHA HANIFAH", "P"]], "X PERHOTELAN 4": [["ALDO IAN PRATAMA", "L"], ["ALIF SAPUTRA", "L"], ["ALVIAN MAHMUD", "L"], ["AMELYA PUTRI RIANTONI", "P"], ["ANINDYA FARADISYAH", "P"], ["ANISA SETYA PUTRI", "P"], ["ARIN FAJRIYAH IRMAWAN", "L"], ["ARYAN PAUL PORAWOUW", "L"], ["ATI NUR AINI", "P"], ["BERLIAN NILNA SHANIA", "P"], ["CHRISNA ARDHANA ZAWATA", "P"], ["FARREL DAFIRENZA PUTRA", "L"], ["FITRIA AYU WULANDARI", "P"], ["GALANG ANDRIAS DEWA PERKASA", "L"], ["INTAN BERLIANA HENDY", "P"], ["JANEETA AZARA", "P"], ["KAIELA PUTRI KIRANA", "P"], ["M. DAFA ALFARISI", "L"], ["MOCHAMAT IRCYAD", "L"], ["MOCHAMMAD RIFKY IS'RA MIRADA", "L"], ["MUHAMMAD KOIRUL ALFAN", "L"], ["NABILA SAUSAN", "P"], ["NANIA ANINDITA ELISA", "P"], ["NAURA HALWA TIHANI", "P"], ["RAMA ARDIANSYAH PUTRA", "L"], ["RANGGA DWI PRAMANA", "L"], ["REISAN ALIEF MAULANA", "L"], ["RIDHO ADITYA REZA", "L"], ["RIZKA WAHYU ARYANI SAPUTRI", "P"], ["ROSSA AULIA SALSABILLA PASHA", "P"], ["SALSABILA FIRAMADHANI", "P"], ["SATRIA OZZY SAPUTRA", "L"], ["SEFANY RAMADHANIA", "P"], ["ZIZOU RUBY AZZKA", "P"], ["ZYAN KAMILA PUTRI", "P"]], "X TKI 1": [["ALEXSA PUTRI WAHYUNI", "P"], ["ALIVTA FIERMA RAHMADIYA", "P"], ["ALUNA KARISMA PUTRI", "P"], ["AMIRA CHAENIRA REZA", "P"], ["ANINDYA KIZANIA SALSABILA", "P"], ["APRILIYA NAILATUS SYAFA'AH", "P"], ["ARDAN BINTANG PRAYATNA", "L"], ["BRILIANT ADZRIL SAPUTRA", "L"], ["CHANAYA NAJWA SANTOSO", "P"], ["ELIZABETH CALISTA", "P"], ["EMILLY SHINTA BETRIC MAULIDA", "P"], ["HURIYAH ASMARA NING MASWAR", "P"], ["JAIZY ZAHRA MIA DIECHA", "P"], ["KAYLA AMALIA AZKA", "P"], ["KAYYISA AQILAH HANANISA", "P"], ["KEZIA AURELIA KURNIA MAHARANI", "P"], ["KLARISA ABIGAIL SIAHAAN", "P"], ["LIFATI AMANAH PRAYITNO", "P"], ["M. FADIL ANNUR SALIM", "L"], ["MEYZHA NUR PRASTYANYI", "P"], ["MICHAELA PUTRI AZZALIKA", "P"], ["MIFTAH AURELLIA ISWAHYUDI", "P"], ["MUTIA FARANI", "P"], ["NATASYA AULIA RAMADHANI", "P"], ["NAVA NETANYA IVANA", "P"], ["NAYLA LINTANG KIRANA", "P"], ["NAYSHITA MAHESWARI AZALIA", "P"], ["NAYZILIA FAHMIDA", "P"], ["PRICILYA EKA MARFIYANTI", "P"], ["RINO NADA NUR RACHMAN", "L"], ["RIZQY DWI SYAHPUTRA", "L"], ["SALWA NUR ZAHRA", "P"], ["TABITHA VALENCIA CHRISTINA", "P"], ["WIDYA KARTIKA SARI", "P"], ["XAVIER ISAAC FADIL PRATAMA", "L"], ["ZAFFARANI FAIRUZ ATHAYA", "P"]], "X TKI 2": [["ADELIA JASMINE YUSUF", "P"], ["AGNECIA SANI AISYAH", "P"], ["AILSA YUANITA ELA WIDAYAT", "P"], ["AISYAH PUTRI ANGGRAINI", "P"], ["ALFIRA NUR AZZAHRA", "P"], ["ANNISA NUR SABRINA MADANIYYAH", "P"], ["APRILIA SAFA NABILA", "P"], ["AVELINE AZALIA CLARISSA", "P"], ["AYRA ANINDYTA PUTRI", "P"], ["DAFFA TAIZ NAFFEZA", "L"], ["DINDA APRILIYA ADNYANA", "P"], ["ELSA AURELIA", "P"], ["FAISHAL FARIS FIRDAUS", "L"], ["FRADHEA BRINEWI ALINSKI", "L"], ["KARINA MAYHANA PINKAN", "P"], ["KIESHA SHAKIENA AZALEA", "P"], ["KIRANA DWI SYAPUTRI", "P"], ["LIVIA MAGDALENA", "P"], ["MAUDY WAHYU AULIA", "P"], ["MAULIDIA SYIFAUL QOLBI", "P"], ["MELANI GHILFA SAFRANI", "P"], ["MESYA ELSIFA PUTRI", "P"], ["MOCH RIFAI ARDIANSYAH", "L"], ["NABILA CAHYANI PUTRI", "P"], ["NABILA ZAHIRA PUTRI", "P"], ["NASHA AZZAHRA PUTRI WAHYUDI", "P"], ["NAUFAL FAYYADH ALFATIH", "L"], ["NUR ALYA ZAHRA", "P"], ["RISKA PUTRI SETIAWAN", "P"], ["SALSA ADELIA PUTRI ARIYANTO", "P"], ["SILFI BELA ANGGRAENI", "P"], ["SYAH RIZAL SATRIADI TRISNAWAN", "L"], ["TIARA DIAN UTAMI", "P"], ["ULFAH AULINA RAHMAWATI", "P"], ["UMAR RASYAA FISABILILLAH FATONI", "L"], ["XAVIERA FEISYA PUTRI SYAHLI", "P"]], "X ULP 1": [["AIRLANGGA DANIA PUTRA", "L"], ["ALVINO RADTYA GUNAWAN", "L"], ["AMELIA PUTRI HARIANI", "P"], ["ANANDA SYAFIRA", "P"], ["ANNISA MUTIARA LARASATI", "P"], ["AQILA AQURAINI AURA ANASTASYA", "P"], ["ARIMBI CHIKA PANGESTUTY", "P"], ["CHELSEA FABIANA QUEENITA", "P"], ["CINDY CINTA FEBIOLA", "P"], ["DENAVIA BENING LOTTA ANDRA ERLI", "P"], ["DIMAS MARSELINO PUTRA", "L"], ["GADIS AYUNINGTYAS PUTRI SUWANDIK", "P"], ["GUINEVERE GRACEILA TAHITU", "P"], ["INDIRA SALAGA VERDA", "P"], ["JESLYN GABRIEL BUDIANTO", "P"], ["JORELL DASTAN GIOVANNI ARLO", "L"], ["KAVI RAZAK ARRACHMAN", "L"], ["KEYLA PUTRI ARSYASHARA", "P"], ["MESSI ALFIAN HIDAYATULLAH", "L"], ["MOCHAMAD FAHRI DAVINO AL CHABIB", "L"], ["MOCHAMMAD ABID KEANU AQILA", "L"], ["MUHAMMAD NIZAR RAKA BAGUS PRAKOSO", "L"], ["NAYLA NUR CHAIRUNISA", "P"], ["NIKITA PUTRI RAKHMAN", "P"], ["NIRINA SALSABILLAH SEPTINIA", "P"], ["NONNY SERLINDA ZASKIA NISA", "P"], ["PUTRI VIONA RAHMADANI", "P"], ["RIFKY SUTANTO", "L"], ["RIKA SYAHIRA PUTRI PRIAMBODO", "P"], ["RIZKY MIRZA BAWAZIR", "L"], ["SALMA AULIA PUTRI", "P"], ["SALMAN FABIAN PUTRA MADAFA", "L"], ["SALSABILLAH NADHIFAH MARWAH", "P"], ["SYIRIN ALMAS QONITAH", "P"], ["VINDHENA ANGEL GENRESIS", "P"], ["WAJIADI AKHYAR NUGROHO", "L"]], "X ULP 2": [["ABELIA WARDHATUL RAHMA", "P"], ["AISHA DHAHAYU WENING TYASQY", "P"], ["ALDY IAN PRATAMA", "L"], ["ALFIAN ARYA CHADAFI", "L"], ["ALFINO U'BAIDILLAH HAMZAH", "L"], ["AMANDA SAFA AUREOLE", "P"], ["AUREL YUKE VALENCIA", "P"], ["AURYN AZALIA AGATHA", "P"], ["AYUNINDYA NAYLA W. PUTRI", "P"], ["BELLA KALILA ZANI", "P"], ["CAHYA PUTRI AL-ARIFIN", "P"], ["DAVIN PUTRA PRATAMA", "L"], ["D'QUEEN LAURA GUNAWAN", "P"], ["ERLIN DWI WULANDARI", "P"], ["IMTINAN NASYIDAH RAMADHANI", "P"], ["KHANSA AURORA ATHASYARA", "P"], ["LAILA ALMALIKA RAHMADANIA", "P"], ["LATIFAH JULIA ANGGRAHENI TEJA KUMARA", "P"], ["MAHESA ABDEL BAR AZ DZIKRA", "L"], ["MARVELINO HERFIANSYAH", "L"], ["MUHAMMAD JIBRIEL FIDIAWAN", "L"], ["MUHAMMAD NADHIF ATHFAL", "L"], ["MUHAMMAD SANDY IMANUDDIN", "L"], ["NADIYAH MUAFA SALSABILA", "P"], ["NAGITA MARSHA SANTOSO", "P"], ["PRISCHA DWI AGUSTIN", "P"], ["PUTRI DJATAYU RETNO PRAMUDITA", "P"], ["QHAISAAR SHUNZI NASSAU OZORA ACHAZIA", "L"], ["RICKY PRATAMA", "L"], ["RISMA FITRI AZZAHRA", "P"], ["SAYYIDAH NAZIHA", "P"], ["SENANDUNG NACITA RAMADHIAN JULIAN PUTRI", "P"], ["SLASHZY ROSE EL PERMANA", "L"], ["SYIFA FITONES ASANKA", "P"], ["TEUKU MUHAMMAD DARU MAULANA ARRASSULI", "L"]]};
+
+// ==== SOAL BANK (120 soal) ====
+const SOAL_BANK = {
+  "X": {
+    "PTS": [
+      {q:"Berapa jumlah pemain bola voli dalam satu tim di lapangan?",o:["4 orang","5 orang","6 orang","7 orang","8 orang"],a:2,p:"Dalam permainan bola voli resmi, satu tim terdiri dari 6 pemain di lapangan."},
+      {q:"Teknik dasar passing bawah dalam bola voli dilakukan dengan menggunakan bagian tubuh?",o:["Telapak tangan","Punggung tangan","Lengan bawah bagian dalam","Pergelangan tangan","Siku"],a:2,p:"Passing bawah menggunakan lengan bawah bagian dalam (platform)."},
+      {q:"Ukuran lapangan bola voli yang resmi adalah...",o:["16 x 8 meter","18 x 9 meter","20 x 10 meter","15 x 8 meter","18 x 10 meter"],a:1,p:"Lapangan bola voli resmi berukuran 18 x 9 meter sesuai standar FIVB."},
+      {q:"Dalam permainan bola basket, lemparan bebas (free throw) dilakukan dari jarak...",o:["4,60 meter","5,80 meter","6,25 meter","4,00 meter","5,00 meter"],a:0,p:"Jarak free throw dari ring basket adalah 4,60 meter (15 feet)."},
+      {q:"Teknik menggiring bola dalam basket disebut...",o:["Passing","Shooting","Dribbling","Pivoting","Lay up"],a:2,p:"Dribbling adalah teknik memantulkan bola ke lantai sambil bergerak."},
+      {q:"Dalam lari jarak pendek (sprint), start yang digunakan adalah...",o:["Start jongkok","Start berdiri","Start melayang","Start duduk","Start berlutut"],a:0,p:"Lari sprint menggunakan start jongkok (crouching start)."},
+      {q:"Aba-aba dalam start jongkok secara berurutan adalah...",o:["Bersedia - Ya - Siap","Siap - Bersedia - Ya","Bersedia - Siap - Ya","Ya - Siap - Bersedia","Siap - Ya - Bersedia"],a:2,p:"Urutan: Bersedia → Siap → Ya (bunyi pistol)."},
+      {q:"Tinggi net bola voli untuk putra adalah...",o:["2,24 meter","2,30 meter","2,43 meter","2,50 meter","2,35 meter"],a:2,p:"Tinggi net resmi bola voli putra adalah 2,43 meter."},
+      {q:"Servis dalam bola voli yang dipukul dari bawah disebut...",o:["Servis atas","Servis bawah","Jump servis","Float servis","Side servis"],a:1,p:"Servis bawah (underhand serve) dipukul dari bawah."},
+      {q:"Jumlah pemain bola basket dalam satu regu di lapangan adalah...",o:["4 orang","5 orang","6 orang","7 orang","8 orang"],a:1,p:"Satu tim basket terdiri dari 5 pemain di lapangan."},
+      {q:"Teknik dasar lompat jauh terdiri dari tahapan...",o:["Awalan - Tolakan - Melayang - Mendarat","Tolakan - Awalan - Melayang - Mendarat","Awalan - Melayang - Tolakan - Mendarat","Mendarat - Melayang - Tolakan - Awalan","Awalan - Tolakan - Mendarat - Melayang"],a:0,p:"Awalan, tolakan, melayang, mendarat."},
+      {q:"Pukulan keras dari atas kepala menuju bawah dalam bulutangkis disebut...",o:["Lob","Dropshot","Smash","Netting","Drive"],a:2,p:"Smash adalah pukulan keras dari atas kepala."},
+      {q:"Ukuran lapangan bulutangkis untuk tunggal adalah...",o:["13,40 x 5,18 meter","13,40 x 6,10 meter","13,00 x 5,18 meter","14,00 x 6,10 meter","12,80 x 5,18 meter"],a:0,p:"13,40 x 5,18 meter."},
+      {q:"Gerakan roll depan dalam senam lantai dimulai dari bagian...",o:["Kepala","Tengkuk","Dahi","Bahu","Punggung"],a:1,p:"Dimulai dari tengkuk yang menyentuh matras."},
+      {q:"Posisi badan saat guling depan (forward roll) adalah...",o:["Membusur","Membulat","Lurus","Membentuk L","Terbuka lebar"],a:1,p:"Badan harus membulat agar putaran sempurna."},
+      {q:"Push-up termasuk komponen kebugaran jasmani yaitu...",o:["Kelentukan","Kecepatan","Kekuatan otot","Kelincahan","Keseimbangan"],a:2,p:"Push-up melatih kekuatan otot lengan, bahu, dan dada."},
+      {q:"TKJI usia 16-19 tahun terdiri dari...",o:["4 butir tes","5 butir tes","6 butir tes","7 butir tes","3 butir tes"],a:1,p:"5 butir: lari 60m, gantung, baring duduk 60s, loncat tegak, lari 1200m/1000m."},
+      {q:"Jumlah pemain setiap regu dalam sepak bola mini yang ideal adalah...",o:["3-4 orang","5-7 orang","8-9 orang","10-11 orang","12-14 orang"],a:1,p:"Sepak bola mini dimainkan 5-7 pemain per regu."},
+      {q:"Tendangan kaki bagian dalam berguna untuk...",o:["Tendangan keras jarak jauh","Operan pendek yang akurat","Menyundul bola","Menggiring bola cepat","Mengontrol bola tinggi"],a:1,p:"Kaki bagian dalam menghasilkan akurasi tinggi untuk operan pendek."},
+      {q:"Passing atas bola voli dilakukan dengan posisi jari membentuk...",o:["Kepalan","Mangkuk (seperti memegang bola)","Lurus ke depan","Mengepal setengah","Telapak tangan rata"],a:1,p:"Jari membentuk mangkuk di atas dahi."},
+      {q:"Double dribble dalam basket terjadi ketika...",o:["Menggiring dua tangan bersamaan","Melakukan pivot","Menangkap bola lalu menggiring lagi","Berlari tanpa bola","Melempar ke ring"],a:2,p:"Menggiring, menangkap, lalu menggiring lagi."},
+      {q:"Penentu utama lari 100 meter adalah komponen...",o:["Daya tahan","Kecepatan","Kelentukan","Keseimbangan","Koordinasi"],a:1,p:"Sprint 100m mengandalkan kecepatan."},
+      {q:"Gaya lompat jauh paling sederhana untuk pemula adalah...",o:["Gaya jongkok (tuck)","Gaya berjalan di udara","Gaya menggantung","Gaya schnepper","Gaya flop"],a:0,p:"Gaya jongkok (tuck/sail) paling sederhana."},
+      {q:"Servis bulutangkis harus dipukul dari ketinggian...",o:["Setinggi bahu","Di atas kepala","Di bawah pinggang","Setinggi dada","Bebas"],a:2,p:"Di bawah pinggang (bawah 1,15m dari lantai)."},
+      {q:"Kemampuan mengubah arah dengan cepat disebut...",o:["Kecepatan","Kekuatan","Kelincahan","Daya tahan","Koordinasi"],a:2,p:"Kelincahan (agility)."},
+      {q:"Pola hidup sehat meliputi tiga aspek utama yaitu...",o:["Makan, minum, olahraga","Makan teratur, istirahat cukup, olahraga teratur","Makan banyak, tidur lama, jalan kaki","Diet ketat, gym, sauna","Vegetarian, yoga, meditasi"],a:1,p:"Pola makan teratur, istirahat cukup, olahraga teratur."},
+      {q:"HIV merupakan singkatan dari...",o:["Human Influenza Virus","Human Immunodeficiency Virus","High Impact Virus","Human Inflammatory Virus","Hyper Immune Virus"],a:1,p:"Human Immunodeficiency Virus."},
+      {q:"Penularan HIV/AIDS TIDAK terjadi melalui...",o:["Transfusi darah","Hubungan seksual berisiko","Berjabat tangan","Berbagi jarum suntik","Ibu ke janin"],a:2,p:"Tidak menular lewat jabat tangan, pelukan, bersin."},
+      {q:"Block dalam bola voli bertujuan...",o:["Menerima servis","Mengumpan bola","Membendung smash lawan","Serangan balik","Mengoper ke belakang"],a:2,p:"Block membendung serangan smash lawan."},
+      {q:"Lay-up shot dalam basket dilakukan dengan...",o:["Menembak dari free throw","Melompat sambil memasukkan bola dekat ring","Melempar dari tengah lapangan","Menggiring lalu berhenti","Memantulkan dari jauh"],a:1,p:"Memasukkan bola dekat ring dengan melompat satu kaki."}
+    ],
+    "PAS": [
+      {q:"Rotasi pemain bola voli dilakukan searah...",o:["Jarum jam","Berlawanan jarum jam","Bebas","Menyilang","Diagonal"],a:0,p:"Searah jarum jam setiap pergantian servis."},
+      {q:"Spike/smash bola voli memerlukan kombinasi...",o:["Berlari dan melompat","Melompat, memukul, mendarat","Langkah awalan, tolakan, pukulan, pendaratan","Hanya melompat tinggi","Hanya memukul keras"],a:2,p:"4 fase: awalan, tolakan, pukulan, pendaratan."},
+      {q:"Travelling dalam basket adalah...",o:["Dribble dua tangan","Membawa bola tanpa dipantulkan >2 langkah","Melempar ke rekan","Dribble terlalu cepat","Berdiri di area terlarang"],a:1,p:"Membawa bola tanpa dribble >2 langkah."},
+      {q:"Three-point line FIBA berjarak berapa dari ring?",o:["5,50m","6,25m","6,75m","7,00m","7,25m"],a:2,p:"6,75 meter."},
+      {q:"Heading dalam sepak bola digunakan untuk...",o:["Menendang","Menangkap","Menyundul bola dengan kepala","Mengontrol dengan dada","Melempar ke dalam"],a:2,p:"Menyundul bola menggunakan dahi."},
+      {q:"Tujuan pemanasan sebelum olahraga adalah...",o:["Meningkatkan suhu tubuh dan mencegah cedera","Menurunkan detak jantung","Mengurangi stamina","Melenturkan tulang","Menambah berat badan"],a:0,p:"Meningkatkan suhu tubuh, aliran darah, mencegah cedera."},
+      {q:"Daerah pergantian tongkat estafet disebut...",o:["Passing zone","Change over zone","Exchange zone","Relay zone","Switch zone"],a:1,p:"Change over zone (20 meter)."},
+      {q:"Gaya tolak peluru untuk pemula adalah...",o:["Gaya menyamping (orthodox)","Gaya membelakangi (O'Brien)","Gaya berputar","Gaya melompat","Gaya berdiri"],a:0,p:"Gaya menyamping paling sederhana."},
+      {q:"Kayang dalam senam lantai melatih...",o:["Kecepatan","Kekuatan perut","Kelentukan/fleksibilitas","Daya tahan","Kelincahan"],a:2,p:"Melatih kelentukan tulang belakang, bahu, pinggul."},
+      {q:"Headstand bertumpu pada...",o:["Kedua tangan saja","Kepala dan kedua tangan membentuk segitiga","Kedua kaki","Bahu dan lengan","Punggung"],a:1,p:"Dahi dan kedua telapak tangan membentuk segitiga."},
+      {q:"Sit-up memperkuat otot...",o:["Lengan","Perut","Punggung bawah","Paha","Betis"],a:1,p:"Melatih kekuatan otot perut."},
+      {q:"Back-up exercise melatih otot bagian...",o:["Perut depan","Punggung bawah","Lengan atas","Paha depan","Bahu"],a:1,p:"Melatih otot punggung bawah (erector spinae)."},
+      {q:"Shuttlecock jatuh di garis dianggap...",o:["Out","In (masuk)","Diulang","Poin server","Fault"],a:1,p:"Tepat di garis = IN sesuai peraturan BWF."},
+      {q:"Lob dalam bulutangkis diarahkan...",o:["Rendah melewati net","Tinggi ke belakang lapangan lawan","Keras ke badan lawan","Tipis di tepi net","Menyilang rendah"],a:1,p:"Pukulan tinggi dan jauh ke belakang lapangan lawan."},
+      {q:"Menangkap bola softball menggunakan...",o:["Tangan kosong","Glove/sarung tangan","Bet","Helm","Pelindung dada"],a:1,p:"Menggunakan glove (sarung tangan khusus)."},
+      {q:"Diamond softball terdiri dari berapa base?",o:["2","3","4 (termasuk home plate)","5","6"],a:2,p:"4 base: home plate, 1st, 2nd, 3rd base."},
+      {q:"NAPZA harus dihindari karena...",o:["Meningkatkan stamina","Menyehatkan jantung","Merusak organ tubuh dan menyebabkan ketergantungan","Menambah kecerdasan","Membuat tidur nyenyak"],a:2,p:"Merusak organ dan menyebabkan ketergantungan."},
+      {q:"Pencegahan HIV/AIDS paling efektif bagi remaja...",o:["Masker","Menghindari perilaku seksual berisiko","Antibiotik","Cuci tangan","Sarung tangan"],a:1,p:"Menghindari perilaku berisiko dan narkoba suntik."},
+      {q:"Durasi permainan basket aturan FIBA...",o:["4 x 10 menit","4 x 12 menit","2 x 20 menit","2 x 45 menit","3 x 15 menit"],a:0,p:"4 quarter x 10 menit = 40 menit."},
+      {q:"Peluru ditolak dari area...",o:["Lingkaran tolak diameter 2,135m","Garis start","Lapangan bebas","Tempat duduk","Lintasan lari"],a:0,p:"Lingkaran tolak berdiameter 2,135 meter."},
+      {q:"Handstand melatih...",o:["Daya tahan kardio","Keseimbangan dan kekuatan lengan","Kecepatan reaksi","Kelincahan kaki","Daya ledak otot"],a:1,p:"Keseimbangan dan kekuatan otot lengan/bahu."},
+      {q:"Frekuensi olahraga yang dianjurkan...",o:["1x/minggu","2x/minggu","3-5x/minggu","Setiap hari tanpa istirahat","Saat merasa sakit"],a:2,p:"3-5 kali per minggu, minimal 150 menit/minggu."},
+      {q:"Overhead pass basket adalah mengoper dari...",o:["Bawah pinggang","Samping badan","Atas kepala","Belakang punggung","Antara kaki"],a:2,p:"Mengoper bola dari atas kepala dengan dua tangan."},
+      {q:"Gaya lompat jauh menirukan berjalan di udara disebut...",o:["Gaya jongkok","Gaya menggantung","Gaya berjalan di udara","Gaya flop","Gaya gunting"],a:2,p:"Walking in the air: kaki bergerak seperti berjalan saat melayang."},
+      {q:"Bola tenis meja berdiameter...",o:["38mm","40mm","42mm","44mm","50mm"],a:1,p:"40 mm, berat 2,7 gram."},
+      {q:"Serangan pertama setelah menerima servis voli disebut...",o:["Blocking","Spiking","Receiving","Digging","Setting"],a:2,p:"Receiving/reception adalah sentuhan pertama."},
+      {q:"Pemanasan sebaiknya dilakukan selama...",o:["1-2 menit","5-10 menit","10-15 menit","20-30 menit","45 menit"],a:2,p:"10-15 menit sebelum aktivitas inti."},
+      {q:"Cooling down setelah olahraga bertujuan...",o:["Menaikkan detak jantung","Mengembalikan tubuh ke kondisi normal","Meningkatkan suhu tubuh","Memperbesar otot","Menambah kelelahan"],a:1,p:"Mengembalikan detak jantung dan suhu tubuh."},
+      {q:"Formasi 4-2 dalam bola voli artinya...",o:["4 penyerang dan 2 pengumpan","4 libero dan 2 spiker","2 bertahan dan 4 server","4 blocker dan 2 digger","Semua menyerang bergiliran"],a:0,p:"4 pemain penyerang (hitter) dan 2 pengumpan (setter)."},
+      {q:"Chest pass basket dilakukan dari posisi bola di...",o:["Atas kepala","Depan dada","Samping pinggang","Belakang badan","Bawah lutut"],a:1,p:"Dari depan dada dengan kedua tangan."}
+    ]
+  },
+  "XI": {
+    "PTS": [
+      {q:"Libero dalam bola voli bertugas khusus...",o:["Menyerang/smash","Servis","Bertahan dan menerima bola","Setter","Block di net"],a:2,p:"Libero spesialis bertahan."},
+      {q:"Zone defense 2-3 dalam basket berarti...",o:["2 di depan free throw, 3 dekat ring","3 menyerang, 2 bertahan","5 di satu area","2 di ring, 3 di half court","Semua man-to-man"],a:0,p:"2 pemain area free throw, 3 dekat ring/baseline."},
+      {q:"Gerakan dasar senam irama meliputi...",o:["Langkah kaki, ayunan lengan, koordinasi irama","Hanya gerakan tangan","Hanya gerakan kaki","Akrobatik salto","Angkat beban"],a:0,p:"Langkah kaki, ayunan lengan, koordinasi sesuai irama."},
+      {q:"Irama musik senam irama menggunakan ketukan...",o:["1/4","2/4, 3/4, atau 4/4","7/8","5/4","Bebas tanpa ketukan"],a:1,p:"2/4, 3/4, atau 4/4."},
+      {q:"Langkah mengangkat lutut tinggi dalam senam irama disebut...",o:["Langkah biasa","Langkah rapat","Langkah keseimbangan","Langkah angkat lutut (knee lift)","Langkah silang"],a:3,p:"Knee lift step: lutut setinggi pinggul."},
+      {q:"Estafet 4x100m menggunakan teknik pergantian...",o:["Visual (melihat)","Non-visual (tanpa melihat)","Semi-visual","Melompat","Melempar"],a:1,p:"Non-visual (blind handoff) karena kecepatan tinggi."},
+      {q:"Panjang tongkat estafet adalah...",o:["20-25cm","28-30cm","25-28cm","30-35cm","35-40cm"],a:1,p:"28-30 cm, berat minimal 50 gram."},
+      {q:"Lempar cakram dimulai dari posisi...",o:["Menghadap depan","Membelakangi arah lemparan","Menyamping kanan","Berlari dari jauh","Duduk di lingkaran"],a:1,p:"Membelakangi arah lempar di dalam lingkaran."},
+      {q:"Berat cakram putra senior...",o:["1 kg","1,5 kg","2 kg","2,5 kg","3 kg"],a:2,p:"2 kg, diameter 219-221 mm."},
+      {q:"Pitcher softball melempar dengan gaya...",o:["Overhand","Underhand/windmill","Sidearm","Behind the back","Setinggi kepala"],a:1,p:"Underhand/windmill dari bawah."},
+      {q:"Catcher softball berada di...",o:["Base pertama","Belakang home plate","Tengah lapangan","Atas pitcher mound","Luar lapangan"],a:1,p:"Berjongkok di belakang home plate."},
+      {q:"Inning dalam softball berjumlah...",o:["5","6","7","9","3"],a:2,p:"7 inning standar."},
+      {q:"Pivot dalam basket berfungsi...",o:["Mencetak poin","Melindungi bola dengan memutar badan pada satu kaki","Dribble","Menggiring cepat","Mengoper jauh"],a:1,p:"Memutar badan dengan satu kaki sebagai poros."},
+      {q:"Rally point system dalam bola voli berarti...",o:["Hanya tim servis mencetak poin","Setiap rally menghasilkan poin","Poin hanya di set terakhir","Poin per 5 menit","Tidak ada poin"],a:1,p:"Setiap rally menghasilkan 1 poin untuk pemenang."},
+      {q:"Quick attack dalam bola voli adalah...",o:["Serangan cepat umpanan rendah dan pendek","Servis cepat","Blocking cepat","Pergantian cepat","Time out singkat"],a:0,p:"Setter memberikan umpanan rendah dan cepat ke middle hitter."},
+      {q:"Meroda (cartwheel) memerlukan komponen...",o:["Hanya kekuatan","Keseimbangan, koordinasi, kelentukan","Hanya kecepatan","Daya tahan saja","Hanya keberanian"],a:1,p:"Keseimbangan, koordinasi, dan kelentukan."},
+      {q:"Denyut nadi diukur di...",o:["Pergelangan tangan atau leher","Punggung kaki","Telapak tangan","Lutut","Bahu"],a:0,p:"Arteri radialis atau arteri karotis."},
+      {q:"Rumus denyut nadi maksimal (DNM)...",o:["220 - umur","200 - umur","250 - umur","180 - umur","220 + umur"],a:0,p:"220 dikurangi umur."},
+      {q:"Screen play dalam basket...",o:["Semua bergerak bebas","Pemain menghalangi lawan agar rekan bebas","Bertahan mundur","Hanya point guard menyerang","Bertukar posisi acak"],a:1,p:"Pemain berdiri menghalangi defender lawan."},
+      {q:"Circuit training adalah...",o:["Melatih satu otot","Berbagai pos latihan berurutan dengan istirahat minimal","Berlari keliling","Berenang nonstop","Hanya stretching"],a:1,p:"Rangkaian pos latihan berbeda yang dikerjakan bergilir."},
+      {q:"Langkah silang vs hop step pada lempar lembing...",o:["Tidak ada perbedaan","Langkah silang: kaki menyilang; hop step: lompatan kecil","Langkah silang lebih cepat","Hop step hanya wanita","Lembing dari posisi duduk"],a:1,p:"Langkah silang kaki menyilang; hop step ada lompatan kecil."},
+      {q:"Ayunan lengan ke samping (side swing) dalam senam irama...",o:["Mempercepat gerakan","Melatih keseimbangan dan kelenturan bahu","Menambah tendangan","Latihan napas","Pemanasan lutut"],a:1,p:"Melatih kelenturan sendi bahu dan keseimbangan."},
+      {q:"Fast break dalam basket adalah...",o:["Istirahat cepat","Serangan cepat sebelum lawan bertahan","Pelanggaran cepat","Pergantian cepat","Time out dadakan"],a:1,p:"Transisi serangan cepat sebelum pertahanan tersusun."},
+      {q:"Antenna pada net voli dipasang di...",o:["Tengah net","Tepat di atas garis samping kedua sisi net","Belakang lapangan","Garis servis","Bebas"],a:1,p:"Di atas garis samping lapangan."},
+      {q:"Strike zone dalam softball adalah area...",o:["Seluruh lapangan","Antara lutut sampai dada batter saat siap memukul","Belakang catcher","Atas kepala batter","Luar lapangan"],a:1,p:"Di atas home plate antara lutut dan bahu batter."},
+      {q:"Pola 5-1 dalam bola voli berarti...",o:["5 servis, 1 libero","5 penyerang dan 1 setter","5 blocker, 1 digger","5 libero, 1 penyerang","1 pemain sendiri"],a:1,p:"5 penyerang dan 1 setter tetap."},
+      {q:"Manfaat senam irama bagi tubuh...",o:["Meningkatkan koordinasi, kelenturan, kebugaran kardio","Hanya menambah berat","Mempercepat penuaan","Mengurangi fleksibilitas","Membuat otot kaku"],a:0,p:"Koordinasi, kelenturan, kebugaran kardiovaskular."},
+      {q:"Daya tahan kardiovaskular dilatih melalui...",o:["Angkat beban berat","Jogging, bersepeda, berenang durasi lama","Sprint 50m","Sit-up 10x","Peregangan statis"],a:1,p:"Aktivitas aerobik berkelanjutan minimal 20-30 menit."},
+      {q:"Fleksibilitas diukur menggunakan tes...",o:["Lari bolak-balik","Sit and reach","Vertical jump","Push-up","Cooper run"],a:1,p:"Sit and reach mengukur fleksibilitas hamstring dan punggung bawah."},
+      {q:"Tangkapan fly ball softball dilakukan dengan glove...",o:["Menghadap bawah di dada","Terbuka menghadap atas di atas kepala","Samping pinggang","Belakang punggung","Bawah lutut"],a:1,p:"Glove terbuka ke atas di atas kepala."}
+    ],
+    "PAS": [
+      {q:"Man-to-man defense dalam basket berarti...",o:["Satu pemain menjaga satu lawan tertentu","Semua menjaga area","Hanya 2 bertahan","Tidak ada pertahanan","Semua menyerang"],a:0,p:"Setiap pemain menjaga satu lawan tertentu."},
+      {q:"Time-delay dalam bola voli bertujuan...",o:["Mempercepat permainan","Mengulur waktu agar lawan kehilangan ritme","Mengganti pemain","Istirahat minum","Memanaskan badan"],a:1,p:"Mengatur tempo untuk merusak ritme lawan."},
+      {q:"Gaya lompat tinggi paling modern...",o:["Gaya gunting","Gaya guling","Gaya flop (Fosbury)","Gaya jongkok","Gaya berdiri"],a:2,p:"Fosbury flop: membelakangi mistar."},
+      {q:"Berat lembing putra senior...",o:["600g","700g","800g","900g","1000g"],a:2,p:"800 gram, panjang 2,60-2,70 meter."},
+      {q:"Permainan Boi-boian menggunakan...",o:["Bola dan tumpukan batu/genteng","Raket dan shuttlecock","Bola basket","Lembing","Cakram"],a:0,p:"Menumpuk batu/genteng lalu menjatuhkannya."},
+      {q:"Bentengan melatih komponen...",o:["Hanya kekuatan","Kelincahan, kecepatan, strategi tim","Kelenturan saja","Daya tahan statis","Koordinasi mata-tangan"],a:1,p:"Kelincahan, kecepatan, dan strategi kerja sama tim."},
+      {q:"Open spike/open attack dari posisi 4 (kiri depan) dilakukan dengan...",o:["Umpanan cepat rendah","Umpanan tinggi dan lebar","Back row attack","Tip/dink","Pipe attack"],a:1,p:"Serangan terbuka dengan umpanan tinggi dan lebar."},
+      {q:"Double fault dalam bulutangkis...",o:["Memukul bola dua kali","Dua kesalahan servis berturut-turut","Menang dua set","Shuttlecock menyentuh net 2x","Wasit meniup 2x"],a:1,p:"Dua kesalahan servis berturut-turut."},
+      {q:"Satu set bola voli dimainkan sampai...",o:["15 poin semua set","25 poin (set 1-4), 15 poin (set 5)","21 poin","30 poin","Waktu 30 menit"],a:1,p:"Set 1-4: 25 poin; Set 5: 15 poin (selisih 2)."},
+      {q:"Musik dalam senam irama berfungsi...",o:["Menambah kebisingan","Menyinkronkan gerakan dengan irama","Mengganggu konsentrasi","Memperlambat gerakan","Mengurangi koordinasi"],a:1,p:"Panduan tempo agar gerakan harmonis dan ekspresif."},
+      {q:"Interval training berbeda dengan continuous karena...",o:["Tidak ada istirahat","Ada periode kerja dan istirahat bergantian","Hanya jalan pelan","Hanya peregangan","Sambil duduk"],a:1,p:"Bergantian intensitas tinggi dan pemulihan."},
+      {q:"Rebound dalam basket adalah...",o:["Servis ulang","Mengambil bola yang memantul dari ring","Pelanggaran menyerang","Menggiring melewati garis tengah","Menembak dari luar"],a:1,p:"Menguasai bola yang memantul dari ring/papan pantul."},
+      {q:"IMT/BMI dihitung dengan rumus...",o:["BB(kg)/TB(m)²","TB/BB","BB x TB","BB + Umur","TB - BB"],a:0,p:"BB(kg) dibagi kuadrat TB dalam meter."},
+      {q:"BMI kategori normal...",o:["<17","17-18,4","18,5-24,9","25-29,9",">30"],a:2,p:"18,5 - 24,9 kg/m²."},
+      {q:"Plyometric meningkatkan...",o:["Kelenturan statis","Daya ledak otot (power)","Daya tahan aerobik","Keseimbangan statis","Komposisi tubuh"],a:1,p:"Daya ledak/explosive power otot."},
+      {q:"Bahaya merokok bagi atlet...",o:["Meningkatkan kapasitas paru","Menurunkan kapasitas paru dan daya tahan","Menambah stamina","Memperkuat jantung","Meningkatkan kecepatan"],a:1,p:"Menurunkan kapasitas paru dan daya tahan."},
+      {q:"Cut/backdoor cut dalam basket adalah...",o:["Memotong rambut","Penyerang memotong arah menuju ring","Menghentikan dribble","Mengambil bola dari lawan","Berdiri diam di ring"],a:1,p:"Pergerakan cepat memotong arah menuju ring."},
+      {q:"Bunt dalam softball adalah...",o:["Memukul sekeras mungkin","Menahan bat tanpa ayunan penuh agar bola jatuh dekat","Melempar ke base","Berlari keliling diamond","Menangkap fly ball"],a:1,p:"Menahan bat di depan bola tanpa ayunan penuh."},
+      {q:"Perbedaan power dan strength...",o:["Tidak ada","Power melibatkan kecepatan; strength hanya tenaga maksimal","Power lebih lambat","Strength pakai alat","Power hanya untuk kaki"],a:1,p:"Power = strength x speed."},
+      {q:"Guling belakang dimulai dari posisi...",o:["Berdiri tegak jatuh ke belakang","Jongkok, menggulung ke belakang dagu menempel dada","Berlari lalu melompat","Duduk bersila","Tengkurap"],a:1,p:"Jongkok, guling ke belakang, dagu di dada."},
+      {q:"Prinsip FITT meliputi...",o:["Fun, Interest, Time, Technique","Frequency, Intensity, Time, Type","Fast, Intense, Tough, Total","Flexibility, Impact, Tension, Timing","Focus, Interval, Target, Training"],a:1,p:"Frequency, Intensity, Time, Type."},
+      {q:"Formasi serve receive 'W' berarti...",o:["5 pemain membentuk huruf W saat terima servis","Wasit memberi isyarat W","Libero mundur","Pemain berlari lingkaran","Setter di depan net"],a:0,p:"5 penerima membentuk huruf W."},
+      {q:"Sektor lemparan lembing yang sah...",o:["180°","90°","Sekitar 29°","45°","60°"],a:2,p:"Sekitar 29 derajat."},
+      {q:"Stretching statis ditahan selama...",o:["1-5 detik","10-30 detik","1-2 menit","5 menit","Tidak perlu ditahan"],a:1,p:"10-30 detik per gerakan."},
+      {q:"Overtraining menyebabkan...",o:["Peningkatan performa drastis","Penurunan performa, kelelahan kronis, risiko cedera","Bertambah tinggi","Meningkatkan daya tahan tanpa batas","Tidak ada efek negatif"],a:1,p:"Penurunan performa dan cedera."},
+      {q:"Libero TIDAK boleh...",o:["Passing bawah","Menerima servis","Servis, smash, atau block","Berdiri di belakang garis serang","Menggantikan pemain belakang"],a:2,p:"Tidak boleh servis, smash di atas net, atau block."},
+      {q:"Komponen skill-related fitness meliputi...",o:["Kecepatan, kelincahan, koordinasi, keseimbangan, daya ledak, waktu reaksi","Hanya kekuatan dan daya tahan","Hanya kelenturan","Berat dan tinggi badan","Kadar lemak"],a:0,p:"6 komponen: speed, agility, coordination, balance, power, reaction time."},
+      {q:"Sacrifice bunt dalam softball bertujuan...",o:["Home run","Mengorbankan diri agar pelari maju ke base berikutnya","Melempar ke pitcher","Menangkap fly ball","Bertahan"],a:1,p:"Batter sengaja out agar pelari maju."},
+      {q:"Cooling down efektif meliputi...",o:["Langsung duduk diam","Jogging ringan lalu peregangan statis","Air es dan tidur","Sprint","Angkat beban berat"],a:1,p:"Jogging ringan 5 menit + peregangan statis."},
+      {q:"Faktor utama yang mempengaruhi kebugaran jasmani...",o:["Hanya genetik","Genetik, pola latihan, nutrisi, istirahat","Hanya makanan","Hanya umur","Hanya jenis kelamin"],a:1,p:"Genetik, program latihan, gizi, dan istirahat."}
+    ]
+  }
+};
+
+// ==== GAME STATE ====
+let state = {nama:'',kelas:'',mode:'',jenjang:'',questions:[],current:0,score:0,correct:0,wrong:0,answers:[],timer:30,timerInterval:null,totalTime:0,answered:false};
+const GURU_PWD = 'pjok2026';
+const STORAGE_KEY = 'kuis_pjok_smkn6_results';
+
+// ==== INIT ====
+(function init(){
+  const sel = document.getElementById('inputKelas');
+  const classes = Object.keys(SISWA_DB).sort((a,b) => {
+    const aX = a.startsWith('X ') || a.startsWith('X-') ? 0 : 1;
+    const bX = b.startsWith('X ') || b.startsWith('X-') ? 0 : 1;
+    if(a.startsWith('XI')) return b.startsWith('XI') ? a.localeCompare(b) : 1;
+    if(b.startsWith('XI')) return -1;
+    return a.localeCompare(b);
+  });
+  classes.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c + ' (' + SISWA_DB[c].length + ' siswa)';
+    sel.appendChild(opt);
+  });
+  // Rekap kelas filter
+  const rSel = document.getElementById('rekapKelas');
+  classes.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    rSel.appendChild(opt);
+  });
+})();
+
+function onKelasChange(){
+  const kelas = document.getElementById('inputKelas').value;
+  const namaSel = document.getElementById('inputNama');
+  namaSel.innerHTML = '<option value="">-- Pilih Nama --</option>';
+  if(kelas && SISWA_DB[kelas]){
+    namaSel.disabled = false;
+    SISWA_DB[kelas].forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s[0];
+      opt.textContent = s[0] + (s[1] ? ' ('+s[1]+')' : '');
+      namaSel.appendChild(opt);
+    });
+  } else {
+    namaSel.disabled = true;
+  }
+  validateForm();
+}
+
+function selectMode(m){state.mode=m;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('selected'));document.getElementById('btn'+m).classList.add('selected');validateForm()}
+function validateForm(){const n=document.getElementById('inputNama').value;const k=document.getElementById('inputKelas').value;document.getElementById('btnStart').disabled=!(n&&k&&state.mode)}
+document.getElementById('inputNama').addEventListener('change',validateForm);
+
+function shuffleArray(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]]}return r}
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function showTab(tab){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  if(tab==='siswa'){document.getElementById('tabSiswa').style.display='block';document.getElementById('tabRekap').style.display='none';document.querySelectorAll('.nav-tab')[0].classList.add('active')}
+  else{document.getElementById('tabSiswa').style.display='none';document.getElementById('tabRekap').style.display='block';document.querySelectorAll('.nav-tab')[1].classList.add('active')}
+}
+
+// ==== MUSIC ====
+let musicPlaying = false;
+// === WEB AUDIO API BGM (works offline!) ===
+let audioCtx=null, bgmInterval=null;
+function playNote(f,s,d,t='triangle',v=0.06){
+  if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,s);
+  g.gain.exponentialRampToValueAtTime(0.001,s+d);o.connect(g);g.connect(audioCtx.destination);
+  o.start(s);o.stop(s+d);
+}
+function playBGMLoop(){
+  if(!audioCtx)return;
+  const n=audioCtx.currentTime,b=0.22;
+  [523,587,659,698,784,659,523,587,784,698,659,587,523,659,784,523].forEach((f,i)=>playNote(f,n+i*b,b*.8));
+  [131,165,175,196,131,165,175,196].forEach((f,i)=>playNote(f,n+i*b*2,b*1.8,'sine',0.04));
+  for(let i=0;i<16;i+=2){const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    o.type='square';o.frequency.value=80;g.gain.setValueAtTime(0.025,n+i*b);
+    g.gain.exponentialRampToValueAtTime(0.001,n+i*b+.05);o.connect(g);g.connect(audioCtx.destination);
+    o.start(n+i*b);o.stop(n+i*b+.05);}
+}
+function toggleMusic(){
+  const btn=document.getElementById('musicToggle');
+  if(musicPlaying){clearInterval(bgmInterval);bgmInterval=null;
+    if(audioCtx){audioCtx.close();audioCtx=null;}musicPlaying=false;btn.textContent='🔇';btn.classList.remove('playing')}
+  else{audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    playBGMLoop();bgmInterval=setInterval(playBGMLoop,3500);musicPlaying=true;btn.textContent='🎵';btn.classList.add('playing')}
+}
+function playSFX(type){try{const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();
+  o.connect(g);g.connect(c.destination);
+  if(type==='correct'){o.type='sine';o.frequency.setValueAtTime(523,c.currentTime);o.frequency.setValueAtTime(659,c.currentTime+.1);
+    o.frequency.setValueAtTime(784,c.currentTime+.2);g.gain.setValueAtTime(.15,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.4);o.start();o.stop(c.currentTime+.4)}
+  else if(type==='wrong'){o.type='sawtooth';o.frequency.setValueAtTime(200,c.currentTime);o.frequency.setValueAtTime(150,c.currentTime+.15);
+    g.gain.setValueAtTime(.1,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.3);o.start();o.stop(c.currentTime+.3)}
+  else if(type==='tick'){o.type='sine';o.frequency.value=880;g.gain.setValueAtTime(.05,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.05);o.start();o.stop(c.currentTime+.05)}
+  setTimeout(()=>c.close(),1000)}catch(e){}}
+
+// ==== PASSWORD ====
+function openPwd(){document.getElementById('pwdOverlay').classList.add('show');document.getElementById('pwdInput').value='';document.getElementById('pwdError').style.display='none';document.getElementById('pwdInput').focus()}
+function closePwd(){document.getElementById('pwdOverlay').classList.remove('show')}
+function checkPwd(){
+  if(document.getElementById('pwdInput').value===GURU_PWD){closePwd();showRekapScreen()}
+  else{document.getElementById('pwdError').style.display='block';document.getElementById('pwdInput').value=''}
+}
+document.getElementById('pwdInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkPwd()});
+
+// ==== QUIZ ====
+function startQuiz(){
+  state.nama=document.getElementById('inputNama').value;
+  state.kelas=document.getElementById('inputKelas').value;
+  state.jenjang=state.kelas.startsWith('XI')?'XI':'X';
+  const bank=SOAL_BANK[state.jenjang][state.mode];
+  state.questions=shuffleArray(bank).slice(0,20);
+  state.current=0;state.score=0;state.correct=0;state.wrong=0;state.answers=[];state.totalTime=0;state.answered=false;
+  showScreen('quizScreen');renderQuestion();
+  if(!musicPlaying)toggleMusic();
+}
+
+function renderQuestion(){
+  const q=state.questions[state.current],total=state.questions.length;
+  document.getElementById('questionNumber').textContent='SOAL '+(state.current+1);
+  document.getElementById('questionText').textContent=q.q;
+  document.getElementById('progressText').textContent='Soal '+(state.current+1)+' / '+total;
+  document.getElementById('progressFill').style.width=((state.current)/total*100)+'%';
+  document.getElementById('scoreDisplay').textContent='⭐ '+state.score;
+  const L=['A','B','C','D','E'],ol=document.getElementById('optionsList');ol.innerHTML='';
+  q.o.forEach((opt,i)=>{const b=document.createElement('button');b.className='option-btn';b.innerHTML='<span class="opt-letter">'+L[i]+'</span><span>'+opt+'</span>';b.onclick=()=>selectAnswer(i);ol.appendChild(b)});
+  document.getElementById('feedbackBar').className='feedback-bar';document.getElementById('feedbackBar').style.display='none';
+  document.getElementById('btnNext').classList.remove('show');state.answered=false;
+  const c=document.getElementById('questionCard');c.style.animation='none';c.offsetHeight;c.style.animation='slideIn .4s ease';
+  startTimer();
+}
+
+function startTimer(){state.timer=30;updateTimerDisplay();clearInterval(state.timerInterval);state.timerInterval=setInterval(()=>{state.timer--;state.totalTime++;updateTimerDisplay();if(state.timer<=0){clearInterval(state.timerInterval);if(!state.answered)timeUp()}},1000)}
+function updateTimerDisplay(){const e=document.getElementById('timerDisplay');e.textContent='⏱ '+state.timer;e.style.color=state.timer<=10?'#ef476f':state.timer<=20?'#ffd166':'#ffd166'}
+
+function timeUp(){
+  state.answered=true;state.wrong++;const q=state.questions[state.current];
+  document.querySelectorAll('.option-btn').forEach((b,i)=>{b.classList.add('disabled');if(i===q.a)b.classList.add('show-correct')});
+  state.answers.push({q:q.q,selected:-1,correct:q.a,options:q.o,isCorrect:false,pembahasan:q.p});
+  const fb=document.getElementById('feedbackBar');fb.className='feedback-bar show wrong-fb';fb.style.display='flex';fb.innerHTML='⏰ Waktu habis! Jawaban: <strong>'+q.o[q.a]+'</strong>';
+  document.getElementById('btnNext').classList.add('show');
+}
+
+function selectAnswer(idx){
+  if(state.answered)return;state.answered=true;clearInterval(state.timerInterval);
+  const q=state.questions[state.current],ok=idx===q.a;
+  document.querySelectorAll('.option-btn').forEach((b,i)=>{b.classList.add('disabled');if(i===idx)b.classList.add(ok?'correct':'wrong');if(!ok&&i===q.a)b.classList.add('show-correct')});
+  if(ok){state.correct++;state.score+=5}else state.wrong++;
+  state.answers.push({q:q.q,selected:idx,correct:q.a,options:q.o,isCorrect:ok,pembahasan:q.p});
+  document.getElementById('scoreDisplay').textContent='⭐ '+state.score;
+  const fb=document.getElementById('feedbackBar');
+  fb.className='feedback-bar show '+(ok?'correct-fb':'wrong-fb');fb.innerHTML=(ok?'✅ Benar! ':'❌ Salah! ')+q.p;fb.style.display='flex';
+  document.getElementById('btnNext').classList.add('show');
+}
+
+function nextQuestion(){state.current++;if(state.current>=state.questions.length)showResult();else renderQuestion()}
+
+function showResult(){
+  clearInterval(state.timerInterval);
+  const total=state.questions.length,nilai=Math.round((state.correct/total)*100);
+  let emoji,title,subtitle,gc,gl;
+  if(nilai>=90){emoji='🏆';title='Luar Biasa!';subtitle='Penguasaan sangat baik';gc='grade-A';gl='A (Sangat Baik)'}
+  else if(nilai>=80){emoji='🌟';title='Hebat!';subtitle='Penguasaan baik';gc='grade-A';gl='A- (Baik)'}
+  else if(nilai>=70){emoji='👍';title='Bagus!';subtitle='Cukup baik';gc='grade-B';gl='B (Cukup Baik)'}
+  else if(nilai>=60){emoji='📚';title='Cukup';subtitle='Perlu belajar lagi';gc='grade-C';gl='C (Cukup)'}
+  else{emoji='💪';title='Semangat!';subtitle='Perbanyak latihan';gc='grade-D';gl='D (Perlu Perbaikan)'}
+  document.getElementById('resultEmoji').textContent=emoji;
+  document.getElementById('resultTitle').textContent=title;
+  document.getElementById('resultSubtitle').textContent=subtitle;
+  document.getElementById('resultScore').textContent=nilai;
+  document.getElementById('statCorrect').textContent=state.correct;
+  document.getElementById('statWrong').textContent=state.wrong;
+  document.getElementById('statTime').textContent=state.totalTime;
+  const tgl=new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('resultStudent').innerHTML=
+    '<div><span class="label-rs">Nama</span>: <strong>'+state.nama+'</strong></div>'+
+    '<div><span class="label-rs">Kelas</span>: <strong>'+state.kelas+'</strong></div>'+
+    '<div><span class="label-rs">Mode</span>: <strong>'+(state.mode==='PTS'?'Penilaian Tengah Semester':'Penilaian Akhir Semester')+'</strong></div>'+
+    '<div><span class="label-rs">Tanggal</span>: <strong>'+tgl+'</strong></div>';
+  document.getElementById('resultGrade').innerHTML='<div class="grade-badge '+gc+'">'+gl+'</div>';
+
+  // Build review
+  const L=['A','B','C','D','E'];
+  document.getElementById('reviewList').innerHTML=state.answers.map((a,i)=>{
+    let at='';
+    if(a.selected===-1)at='<span class="rv-wrong-text">Tidak dijawab</span> → <span class="rv-correct-text">'+L[a.correct]+'. '+a.options[a.correct]+'</span>';
+    else if(a.isCorrect)at='<span class="rv-correct-text">'+L[a.selected]+'. '+a.options[a.selected]+' ✅</span>';
+    else at='<span class="rv-wrong-text">'+L[a.selected]+'. '+a.options[a.selected]+'</span> → <span class="rv-correct-text">'+L[a.correct]+'. '+a.options[a.correct]+'</span>';
+    return '<div class="review-item '+(a.isCorrect?'rv-correct':'rv-wrong')+'"><div class="rv-q">'+(i+1)+'. '+a.q+'</div><div class="rv-ans">'+at+'</div><div style="margin-top:4px;font-size:12px;color:#a7a9be">💡 '+a.pembahasan+'</div></div>';
+  }).join('');
+  document.getElementById('reviewList').classList.remove('show');
+
+  // AUTO SAVE to localStorage
+  saveResult(nilai,tgl);
+
+  showScreen('resultScreen');
+}
+
+function saveResult(nilai,tgl){
+  try{
+    let data=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+    data.push({nama:state.nama,kelas:state.kelas,mode:state.mode,nilai:nilai,benar:state.correct,salah:state.wrong,waktu:state.totalTime,tanggal:tgl,timestamp:Date.now()});
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+    document.getElementById('savedBadge').innerHTML='<div class="saved-badge">💾 Nilai tersimpan otomatis</div>';
+  }catch(e){
+    document.getElementById('savedBadge').innerHTML='<div style="color:var(--danger);font-size:12px;margin-top:8px">⚠️ Gagal menyimpan (storage penuh)</div>';
+  }
+}
+
+function toggleReview(){document.getElementById('reviewList').classList.toggle('show')}
+function retryQuiz(){startQuiz()}
+function goHome(){clearInterval(state.timerInterval);showScreen('homeScreen')}
+
+// ==== REKAP GURU ====
+function showRekapScreen(){showScreen('rekapScreen');filterRekap()}
+function filterRekap(){
+  const kelas=document.getElementById('rekapKelas').value;
+  const mode=document.getElementById('rekapMode').value;
+  let data=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  if(kelas!=='all')data=data.filter(d=>d.kelas===kelas);
+  if(mode!=='all')data=data.filter(d=>d.mode===mode);
+  data.sort((a,b)=>b.timestamp-a.timestamp);
+  const body=document.getElementById('rekapBody');
+  const empty=document.getElementById('rekapEmpty');
+  if(data.length===0){body.innerHTML='';empty.style.display='block';document.getElementById('rekapStats').textContent='';return}
+  empty.style.display='none';
+  const avg=Math.round(data.reduce((s,d)=>s+d.nilai,0)/data.length);
+  const mx=Math.max(...data.map(d=>d.nilai));
+  const mn=Math.min(...data.map(d=>d.nilai));
+  document.getElementById('rekapStats').innerHTML='📊 <strong>'+data.length+'</strong> data | Rata-rata: <strong>'+avg+'</strong> | Tertinggi: <strong style="color:var(--success)">'+mx+'</strong> | Terendah: <strong style="color:var(--danger)">'+mn+'</strong>';
+  body.innerHTML=data.map((d,i)=>'<tr><td>'+(i+1)+'</td><td>'+d.nama+'</td><td style="font-size:11px">'+d.kelas+'</td><td>'+d.mode+'</td><td style="font-weight:700;color:'+(d.nilai>=70?'var(--success)':'var(--danger)')+'">'+d.nilai+'</td><td>'+d.benar+'/20</td><td>'+d.waktu+'s</td><td style="font-size:10px">'+d.tanggal+'</td></tr>').join('');
+}
+
+function exportRekap(){
+  let data=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  if(!data.length){alert('Tidak ada data untuk di-export');return}
+  let csv='No,Nama Siswa,Kelas,Mode,Nilai,Benar,Salah,Waktu (detik),Tanggal\n';
+  data.forEach((d,i)=>{csv+=(i+1)+',"'+d.nama+'","'+d.kelas+'",'+d.mode+','+d.nilai+','+d.benar+','+d.salah+','+d.waktu+',"'+d.tanggal+'"\n'});
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='Rekap_Kuis_PJOK_SMKN6_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+function confirmClear(){if(confirm('Yakin hapus SEMUA data rekap nilai?\nData yang sudah dihapus tidak bisa dikembalikan!')){localStorage.removeItem(STORAGE_KEY);filterRekap()}}
+
+// Anti right-click & DevTools for students
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&(e.key==='u'||e.key==='s'||e.key==='i'||e.key==='j')||e.key==='F12')e.preventDefault()});
+</script>
+</body>
+</html>
