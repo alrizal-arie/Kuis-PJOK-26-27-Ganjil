@@ -535,11 +535,23 @@ function checkPwd(){
 }
 document.getElementById('pwdInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkPwd()});
 
+// ==== ATTEMPT LIMITER (Maks 2x per siswa per mode) ====
+const MAX_ATTEMPTS=2;
+function getAttemptKey(nama,kelas,mode){return 'attempt_'+btoa(unescape(encodeURIComponent(nama+'|'+kelas+'|'+mode)))}
+function getAttemptCount(nama,kelas,mode){try{return parseInt(localStorage.getItem(getAttemptKey(nama,kelas,mode))||'0')}catch(e){return 0}}
+function addAttempt(nama,kelas,mode){try{const k=getAttemptKey(nama,kelas,mode);localStorage.setItem(k,''+(getAttemptCount(nama,kelas,mode)+1))}catch(e){}}
+
 // ==== QUIZ ====
 function startQuiz(){
   state.nama=document.getElementById('inputNama').value;
   state.kelas=document.getElementById('inputKelas').value;
   state.jenjang=state.kelas.startsWith('XI')?'XI':'X';
+  // Cek batas kesempatan
+  const used=getAttemptCount(state.nama,state.kelas,state.mode);
+  if(used>=MAX_ATTEMPTS){
+    alert('⚠️ Kesempatan mengerjakan '+state.mode+' sudah habis ('+MAX_ATTEMPTS+'x).\n\nNama: '+state.nama+'\nKelas: '+state.kelas+'\nMode: '+state.mode+'\n\nHubungi guru PJOK jika ingin mengulang.');
+    return;
+  }
   const bank=SOAL_BANK[state.jenjang][state.mode];
   state.questions=shuffleArray(bank).slice(0,20);
   state.current=0;state.score=0;state.correct=0;state.wrong=0;state.answers=[];state.totalTime=0;state.answered=false;
@@ -631,16 +643,23 @@ function showResult(){
 function saveResult(nilai,tgl){
   try{
     let data=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
-    data.push({nama:state.nama,kelas:state.kelas,mode:state.mode,nilai:nilai,benar:state.correct,salah:state.wrong,waktu:state.totalTime,tanggal:tgl,timestamp:Date.now()});
+    const attemptNum=getAttemptCount(state.nama,state.kelas,state.mode)+1;
+    data.push({nama:state.nama,kelas:state.kelas,mode:state.mode,nilai:nilai,benar:state.correct,salah:state.wrong,waktu:state.totalTime,tanggal:tgl,timestamp:Date.now(),attempt:attemptNum});
     localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
-    document.getElementById('savedBadge').innerHTML='<div class="saved-badge">💾 Nilai tersimpan otomatis</div>';
+    addAttempt(state.nama,state.kelas,state.mode);
+    const sisa=MAX_ATTEMPTS-attemptNum;
+    document.getElementById('savedBadge').innerHTML='<div class="saved-badge">💾 Nilai tersimpan otomatis (Kesempatan ke-'+attemptNum+'/'+MAX_ATTEMPTS+')'+(sisa>0?' — Sisa '+sisa+'x lagi':'')+'</div>';
   }catch(e){
     document.getElementById('savedBadge').innerHTML='<div style="color:var(--danger);font-size:12px;margin-top:8px">⚠️ Gagal menyimpan (storage penuh)</div>';
   }
 }
 
 function toggleReview(){document.getElementById('reviewList').classList.toggle('show')}
-function retryQuiz(){startQuiz()}
+function retryQuiz(){
+  const used=getAttemptCount(state.nama,state.kelas,state.mode);
+  if(used>=MAX_ATTEMPTS){alert('⚠️ Kesempatan mengerjakan '+state.mode+' sudah habis ('+MAX_ATTEMPTS+'x).\n\nHubungi guru PJOK jika ingin mengulang.');goHome();return}
+  startQuiz();
+}
 function goHome(){clearInterval(state.timerInterval);showScreen('homeScreen')}
 
 // ==== REKAP GURU ====
